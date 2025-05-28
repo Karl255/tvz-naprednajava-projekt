@@ -1,6 +1,7 @@
 package hr.tvz.napredna.java.dijezetserver.service.impl;
 
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
+import hr.tvz.napredna.java.dijezetserver.mapper.LineMapper;
 import hr.tvz.napredna.java.dijezetserver.model.Line;
 import hr.tvz.napredna.java.dijezetserver.repository.LineRepository;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
@@ -48,10 +49,10 @@ public class LineServiceImpl implements LineService {
     }
 
     private LineDto toDto(Line line) {
-        return new LineDto(line.getId(), line.getName());
+        return LineMapper.toDto(line);
     }
 
     private Line toEntity(LineDto lineDto) {
-        return new Line(lineDto.getName());
+        return LineMapper.toEntity(lineDto);
     }
 }
