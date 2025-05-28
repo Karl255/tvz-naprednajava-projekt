@@ -1,0 +1,13 @@
+package hr.tvz.napredna.java.dijezetserver;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class DiJeZetServerApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
