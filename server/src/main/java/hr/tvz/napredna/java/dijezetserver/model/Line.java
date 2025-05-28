@@ -1,24 +1,26 @@
 package hr.tvz.napredna.java.dijezetserver.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.math.BigInteger;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name="Line")
+@Table(name = "Line")
 public class Line {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private BigInteger id;
+    private Long id;
     private String name;
 
-    public Line(String name){
+    public Line(String name) {
         this.name = name;
     }
 }

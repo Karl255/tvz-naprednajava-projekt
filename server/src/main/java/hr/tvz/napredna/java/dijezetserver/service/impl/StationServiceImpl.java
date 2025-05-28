@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,13 +29,13 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public void deleteById(BigInteger id) {
+    public void deleteById(Long id) {
         stationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Station with id " + id + " not found"));
         stationRepository.deleteById(id);
     }
 
     @Override
-    public StationDto update(BigInteger id, StationDto stationDto) {
+    public StationDto update(Long id, StationDto stationDto) {
         Optional<Station> stationUpdatedOptional = stationRepository.findById(id);
         if (stationUpdatedOptional.isPresent()) {
             Station station = stationUpdatedOptional.get();
