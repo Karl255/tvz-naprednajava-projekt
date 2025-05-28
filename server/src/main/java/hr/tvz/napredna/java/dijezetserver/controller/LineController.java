@@ -1,7 +1,9 @@
 package hr.tvz.napredna.java.dijezetserver.controller;
 
+import hr.tvz.napredna.java.dijezetserver.config.UrlPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,8 @@ import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/di-je-zet/api/line")
+@RequestMapping(UrlPaths.LINE)
+@Tag(name = "Line", description = "CRUD operations for public transport lines")
 @AllArgsConstructor
 public class LineController {
 
