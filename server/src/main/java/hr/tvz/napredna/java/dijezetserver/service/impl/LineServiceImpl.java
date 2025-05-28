@@ -8,7 +8,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public LineDto update(BigInteger id, LineDto lineDto) {
+    public LineDto update(Long id, LineDto lineDto) {
         Optional<Line> lineOptional = lineRepository.findById(id);
         if (lineOptional.isPresent()) {
             Line line = lineOptional.get();
@@ -43,7 +42,7 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public void deleteById(BigInteger id) {
+    public void deleteById(Long id) {
         lineRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Line with id " + id + " not found."));
         lineRepository.deleteById(id);
     }

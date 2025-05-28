@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -38,12 +37,12 @@ public class StationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StationDto> updateStation(@PathVariable BigInteger id, @RequestBody StationDto stationDto) {
+    public ResponseEntity<StationDto> updateStation(@PathVariable Long id, @RequestBody StationDto stationDto) {
         return new ResponseEntity<>(stationService.update(id, stationDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStation(@PathVariable BigInteger id) {
+    public ResponseEntity<Void> deleteStation(@PathVariable Long id) {
         try {
             stationService.deleteById(id);
             return ResponseEntity.noContent().build();

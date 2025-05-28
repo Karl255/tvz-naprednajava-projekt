@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class StationDto {
-    private BigInteger id;
+    private Long id;
     private String name;
 }
