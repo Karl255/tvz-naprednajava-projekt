@@ -1,2 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import { MapLibre } from 'svelte-maplibre';
+</script>
+
+<MapLibre
+	style="/map-styles/osm-liberty.json"
+	standardControls="bottom-left"
+	center={[15.985, 45.8]}
+	zoom={12}
+	dragRotate={false}
+	pitchWithRotate={false}
+/>
