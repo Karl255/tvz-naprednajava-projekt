@@ -1,6 +1,6 @@
 package hr.tvz.napredna.java.dijezetserver.controller;
 
-import hr.tvz.napredna.java.dijezetserver.config.UrlPaths;
+import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.CommentDto;
 import hr.tvz.napredna.java.dijezetserver.request.CommentRequest;
 import hr.tvz.napredna.java.dijezetserver.service.CommentService;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(UrlPaths.COMMENT)
+@RequestMapping(ApiPaths.COMMENT)
 @Tag(name = "Comment", description = "CRUD operations for comments")
 @AllArgsConstructor
 public class CommentController {
@@ -36,7 +36,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequest commentRequest) {
         try {
-            return new ResponseEntity<>(commentService.save(commentRequest), HttpStatus.CREATED);
+            return new ResponseEntity<>(commentService.create(commentRequest), HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

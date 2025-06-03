@@ -8,7 +8,7 @@ import java.util.List;
 public interface CommentService {
     List<CommentDto> findAll();
 
-    CommentDto save(CommentRequest commentRequest);
+    CommentDto create(CommentRequest commentRequest);
 
     CommentDto update(Long id, CommentRequest commentRequest);
 

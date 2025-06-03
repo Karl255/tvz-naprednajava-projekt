@@ -8,7 +8,6 @@ import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.CommentRequest;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public final class CommentMapper {
@@ -34,7 +33,7 @@ public final class CommentMapper {
                 user,
                 pin,
                 parentComment,
-                new ArrayList<>(),
+                List.of(),
                 commentRequest.getIssueType(),
                 LocalDateTime.now()
         );

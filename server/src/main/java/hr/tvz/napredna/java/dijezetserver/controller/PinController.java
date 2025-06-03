@@ -1,6 +1,6 @@
 package hr.tvz.napredna.java.dijezetserver.controller;
 
-import hr.tvz.napredna.java.dijezetserver.config.UrlPaths;
+import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.PinDto;
 import hr.tvz.napredna.java.dijezetserver.request.PinRequest;
 import hr.tvz.napredna.java.dijezetserver.service.PinService;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(UrlPaths.PIN)
+@RequestMapping(ApiPaths.PIN)
 @Tag(name = "Pin", description = "CRUD operations for pins")
 @AllArgsConstructor
 public class PinController {
@@ -37,8 +37,8 @@ public class PinController {
     public ResponseEntity<PinDto> createPin(@RequestBody PinRequest pinRequest) {
         try {
             return new ResponseEntity<>(pinService.save(pinRequest), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 

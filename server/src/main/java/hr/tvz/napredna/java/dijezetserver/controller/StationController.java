@@ -1,6 +1,6 @@
 package hr.tvz.napredna.java.dijezetserver.controller;
 
-import hr.tvz.napredna.java.dijezetserver.config.UrlPaths;
+import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.StationDto;
 import hr.tvz.napredna.java.dijezetserver.service.StationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(UrlPaths.STATION)
+@RequestMapping(ApiPaths.STATION)
 @Tag(name = "Station", description = "CRUD operations for public transport stations")
 @AllArgsConstructor
 public class StationController {

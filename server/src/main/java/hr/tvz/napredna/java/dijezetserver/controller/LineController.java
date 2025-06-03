@@ -1,6 +1,6 @@
 package hr.tvz.napredna.java.dijezetserver.controller;
 
-import hr.tvz.napredna.java.dijezetserver.config.UrlPaths;
+import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(UrlPaths.LINE)
+@RequestMapping(ApiPaths.
+        LINE)
 @Tag(name = "Line", description = "CRUD operations for public transport lines")
 @AllArgsConstructor
 public class LineController {
