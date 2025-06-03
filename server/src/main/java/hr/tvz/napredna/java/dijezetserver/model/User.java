@@ -10,17 +10,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "Users")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Table(name = "Station")
-public class Station {
+public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
 
-    public Station(String name) {
-        this.name = name;
-    }
+    private String username;
+    private String hashedPassword;
 }

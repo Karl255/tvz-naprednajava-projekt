@@ -1,7 +1,9 @@
 package hr.tvz.napredna.java.dijezetserver.controller;
 
+import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/di-je-zet/api/line")
+@RequestMapping(ApiPaths.
+        LINE)
+@Tag(name = "Line", description = "CRUD operations for public transport lines")
 @AllArgsConstructor
 public class LineController {
 
@@ -35,12 +38,12 @@ public class LineController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LineDto> updateLine(@PathVariable BigInteger id, @RequestBody LineDto lineDto) {
+    public ResponseEntity<LineDto> updateLine(@PathVariable Long id, @RequestBody LineDto lineDto) {
         return new ResponseEntity<>(lineService.update(id, lineDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLine(@PathVariable BigInteger id) {
+    public ResponseEntity<Void> deleteLine(@PathVariable Long id) {
         try {
             lineService.deleteById(id);
             return ResponseEntity.noContent().build();

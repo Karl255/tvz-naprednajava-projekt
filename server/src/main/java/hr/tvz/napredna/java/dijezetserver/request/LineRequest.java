@@ -1,13 +1,12 @@
-package hr.tvz.napredna.java.dijezetserver.dto;
+package hr.tvz.napredna.java.dijezetserver.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class LineDto {
-    private Long id;
+public class LineRequest {
     private String name;
 }

@@ -1,6 +1,7 @@
 package hr.tvz.napredna.java.dijezetserver.service.impl;
 
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
+import hr.tvz.napredna.java.dijezetserver.mapper.LineMapper;
 import hr.tvz.napredna.java.dijezetserver.model.Line;
 import hr.tvz.napredna.java.dijezetserver.repository.LineRepository;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
@@ -8,7 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public LineDto update(BigInteger id, LineDto lineDto) {
+    public LineDto update(Long id, LineDto lineDto) {
         Optional<Line> lineOptional = lineRepository.findById(id);
         if (lineOptional.isPresent()) {
             Line line = lineOptional.get();
@@ -43,16 +43,16 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public void deleteById(BigInteger id) {
+    public void deleteById(Long id) {
         lineRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Line with id " + id + " not found."));
         lineRepository.deleteById(id);
     }
 
     private LineDto toDto(Line line) {
-        return new LineDto(line.getId(), line.getName());
+        return LineMapper.toDto(line);
     }
 
     private Line toEntity(LineDto lineDto) {
-        return new Line(lineDto.getName());
+        return LineMapper.toEntity(lineDto);
     }
 }
