@@ -1,16 +1,13 @@
-@layer vars, basic, specific;
+@layer defs, basic, specific;
 
-@import url('variables.css') layer(vars);
+@import url('fonts.css') layer(defs);
+@import url('variables.css') layer(defs);
 
 @layer basic {
     *,
     ::before,
     ::after {
         box-sizing: border-box;
-    }
-
-    :root {
-    	font-family: serif;
     }
 
     html {
@@ -20,5 +17,12 @@
     body {
         margin: 0;
         height: 100%;
+
+    	font-family: "Inter";
+    }
+    
+    button,
+    select {
+        font: inherit;
     }
 }

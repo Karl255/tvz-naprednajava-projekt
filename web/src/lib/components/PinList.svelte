@@ -4,6 +4,6 @@
 
 <style>
 	.container {
-		background-color: var(--color-zet);
+		background-color: var(--color-primary);
 	}
 </style>
