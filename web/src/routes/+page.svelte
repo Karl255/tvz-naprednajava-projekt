@@ -1,6 +1,10 @@
 <script lang="ts">
 	import PinList from '$lib/components/PinList.svelte';
-	import { MapLibre } from 'svelte-maplibre';
+	import { DefaultMarker, MapLibre } from 'svelte-maplibre';
+
+	type Pin = [number, number];
+
+	const pins: Pin[] = [[15.985, 45.8]];
 </script>
 
 <div class="map-container">
@@ -12,7 +16,11 @@
 		zoom={12}
 		dragRotate={false}
 		pitchWithRotate={false}
-	/>
+	>
+		{#each pins as pin (pin)}
+			<DefaultMarker lngLat={pin} />
+		{/each}
+	</MapLibre>
 
 	<PinList />
 </div>
