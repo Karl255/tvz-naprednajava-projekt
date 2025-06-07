@@ -1,4 +1,7 @@
 :root {
     --color-primary: #1264ab;
     --color-primary-dark: #204260;
+    
+    --shadow: 2px 4px 4px color(srgb 0 0 0 / 25%);
+    --shadow-hover: 2px 4px 4px color(srgb 0 0 0 / 50%);
 }
