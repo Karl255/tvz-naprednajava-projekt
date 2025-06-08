@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "Pin")
+@Table(name = "pin")
 public class Pin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
