@@ -1,0 +1,15 @@
+:root {
+    --color-primary: #1264ab;
+    --color-primary-light: #5c9dd6;
+    --color-primary-dark: #204260;
+    
+    --color-background: #f3f4f6;
+    --color-text-inverse: var(--color-background);
+    
+    --color-backdrop: rgb(from #204260 r g b / 0.48);
+    
+    --border-radius: 3px;
+    
+    --shadow: 2px 4px 4px color(srgb 0 0 0 / 25%);
+    --shadow-hover: 2px 4px 4px color(srgb 0 0 0 / 50%);
+}

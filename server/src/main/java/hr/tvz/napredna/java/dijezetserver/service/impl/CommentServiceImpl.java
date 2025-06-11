@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -38,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto create(CommentRequest commentRequest) {
-        Comment parent = commentRequest.getParentId().map(id -> commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Parent comment does not exist"))).orElse(null);
+        Comment parent = Optional.ofNullable(commentRequest.getParentId()).map(id -> commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Parent comment does not exist"))).orElse(null);
         Pin pin = pinRepository.findById(commentRequest.getPinId()).orElseThrow(() -> new IllegalArgumentException("Pin with id " + commentRequest.getPinId() + " not found"));
 
         Comment comment = toComment(commentRequest, null, parent, pin);

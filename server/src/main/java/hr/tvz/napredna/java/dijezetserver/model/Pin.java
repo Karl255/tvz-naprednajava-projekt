@@ -1,5 +1,6 @@
 package hr.tvz.napredna.java.dijezetserver.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +26,12 @@ public class Pin {
 
     @ManyToOne
     @JoinColumn(name = "station_id")
+    @Nullable
     private Station station;
+
     @ManyToOne
     @JoinColumn(name = "line_id")
+    @Nullable
     private Line line;
 
     private BigDecimal latitude;

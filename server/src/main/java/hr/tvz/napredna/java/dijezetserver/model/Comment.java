@@ -1,5 +1,6 @@
 package hr.tvz.napredna.java.dijezetserver.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +40,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
+    @Nullable
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", orphanRemoval = true)

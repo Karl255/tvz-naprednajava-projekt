@@ -1,9 +1,84 @@
-*,
-::before,
-::after {
-    box-sizing: border-box;
+@layer defs, basic, specific;
+
+@import url('fonts.css') layer(defs);
+@import url('variables.css') layer(defs);
+
+@layer basic {
+    *,
+    ::before,
+    ::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        height: 100%;
+
+    	font-family: "Inter";
+        font-size: 16px;
+        line-height: 1.2;
+        font-weight: 400;
+    }
+    
+    p {
+        margin: 0;
+    }
+    
+    button,
+    select,
+    label {
+        font: inherit;
+    }
 }
 
-:root {
-	font-family: serif;
+@layer specific {
+    .form {
+        color: var(--color-text-inverse);
+        background-color: var(--color-primary-dark);
+        box-shadow: var(--shadow);
+        
+        border: none;
+        border-radius: var(--border-radius);
+        padding: 20px 30px;
+        
+        flex-direction: column;
+        gap: 21px;
+        
+        font-size: 20px;
+        
+        &:is(dialog){
+            &[open] {
+                display: flex;
+            }
+            
+            ::backdrop {
+                background-color: var(--color-backdrop);
+            }
+        }
+        
+        .header {
+            font-size: 36px;
+            font-weight: 600;
+            text-align: center;
+        }
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+    
+    select,
+    textarea {
+        font: inherit;
+        background-color: var(--color-background);
+        border: none;
+        border-radius: var(--border-radius);
+        padding: 10px 15px;
+    }
 }
