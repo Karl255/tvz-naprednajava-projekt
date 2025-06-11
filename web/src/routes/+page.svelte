@@ -3,15 +3,21 @@
 	import PinList from '$lib/components/PinList.svelte';
 	import PinMarker from '$lib/components/PinMarker.svelte';
 	import { ButtonSize, ButtonVariation } from '$lib/model/components';
-	import { type LngLat, type MapMouseEvent, type LngLatLike } from 'maplibre-gl';
+	import { type LngLatLike, type MapMouseEvent } from 'maplibre-gl';
 	import { MapLibre } from 'svelte-maplibre';
 
-	const pins: LngLatLike[] = [[15.985, 45.8]];
+	const pins: [number, number][] = $state([[15.985, 45.8]]);
 
-	let selectedLocation: LngLat | null = $state(null);
+	let selectedLocation: LngLatLike | null = $state(null);
 
 	function selectLocation(e: MapMouseEvent) {
-		selectedLocation = e.lngLat;
+		if (selectedLocation === null) {
+			selectedLocation = e.lngLat;
+
+			pins.push(e.lngLat.toArray());
+		} else {
+			selectedLocation = null;
+		}
 	}
 </script>
 
@@ -25,6 +31,8 @@
 			zoom={12}
 			dragRotate={false}
 			pitchWithRotate={false}
+			attributionControl={false}
+			zoomOnDoubleClick={false}
 			onclick={selectLocation}
 		>
 			{#each pins as pin (pin)}
@@ -39,7 +47,7 @@
 		>
 	</div>
 
-	<PinList />
+	<PinList></PinList>
 </div>
 
 <style>
