@@ -2,7 +2,11 @@
     --color-primary: #1264ab;
     --color-primary-light: #5c9dd6;
     --color-primary-dark: #204260;
-    --color-text-inverse: #f3f4f6;
+    
+    --color-background: #f3f4f6;
+    --color-text-inverse: var(--color-background);
+    
+    --color-backdrop: rgb(from #204260 r g b / 0.48);
     
     --border-radius: 3px;
     

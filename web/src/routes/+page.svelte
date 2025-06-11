@@ -6,15 +6,17 @@
 	import { type LngLat, type MapMouseEvent } from 'maplibre-gl';
 	import { MapLibre } from 'svelte-maplibre';
 	import type { PageProps } from './$types';
-	import type { PinDto } from '$lib/model/dto';
+	import type { LineDto, PinDto, StationDto } from '$lib/model/dto';
 	import { pinToLngLat } from '$lib/utils/model';
 	import { pinApi } from '$lib/api/pin.api';
+	import ReportIssueModal from '$lib/components/ReportIssueModal.svelte';
 
 	const { data }: PageProps = $props();
 
 	const pins: PinDto[] = $state(data.pins);
 
 	let selectedLocation: LngLat | null = $state(null);
+	let reportIssueModal: ReturnType<typeof ReportIssueModal>;
 
 	function selectLocation(e: MapMouseEvent) {
 		if (selectedLocation === null) {
@@ -24,7 +26,7 @@
 		}
 	}
 
-	async function reportIssue() {
+	async function reportIssue(station: StationDto, line: LineDto, comment: string) {
 		if (selectedLocation === null) {
 			return;
 		}
@@ -32,11 +34,17 @@
 		const newPin = {
 			longitude: selectedLocation.lng,
 			latitude: selectedLocation.lat,
+			stationId: station.id,
+			lineId: line.id,
 		};
 
 		const pin = await pinApi.create(newPin);
 		selectedLocation = null;
 		pins.push(pin);
+	}
+
+	async function openReportModal() {
+		reportIssueModal.open();
 	}
 </script>
 
@@ -63,13 +71,18 @@
 			{/if}
 		</MapLibre>
 
-		<Button variation={ButtonVariation.PRIMARY_DARK} size={ButtonSize.LARGE} class="report-issue" onclick={reportIssue}
-			>+ Report issue</Button
+		<Button
+			variation={ButtonVariation.PRIMARY_DARK}
+			size={ButtonSize.LARGE}
+			class="report-issue"
+			onclick={openReportModal}>+ Report issue</Button
 		>
 	</div>
 
 	<PinList {pins}></PinList>
 </div>
+
+<ReportIssueModal bind:this={reportIssueModal} stations={data.stations} lines={data.lines} onReport={reportIssue} />
 
 <style>
 	.container {
