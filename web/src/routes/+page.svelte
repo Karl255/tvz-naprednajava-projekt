@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import PinList from '$lib/components/PinList.svelte';
+	import PinMarker from '$lib/components/PinMarker.svelte';
 	import { ButtonSize, ButtonVariation } from '$lib/model/components';
 	import { type LngLat, type MapMouseEvent, type LngLatLike } from 'maplibre-gl';
-	import { DefaultMarker, MapLibre } from 'svelte-maplibre';
+	import { MapLibre } from 'svelte-maplibre';
 
 	const pins: LngLatLike[] = [[15.985, 45.8]];
 
@@ -27,10 +28,10 @@
 			onclick={selectLocation}
 		>
 			{#each pins as pin (pin)}
-				<DefaultMarker lngLat={pin} />
+				<PinMarker lngLat={pin} color="var(--color-primary)" />
 			{/each}
 			{#if selectedLocation !== null}
-				<DefaultMarker lngLat={selectedLocation} />
+				<PinMarker lngLat={selectedLocation} />
 			{/if}
 		</MapLibre>
 
