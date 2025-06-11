@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(ApiPaths.
-        LINE)
+@RequestMapping(ApiPaths.LINE)
 @Tag(name = "Line", description = "CRUD operations for public transport lines")
 @AllArgsConstructor
 public class LineController {
