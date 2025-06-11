@@ -7,13 +7,14 @@
 		variation: ButtonVariation;
 		size?: ButtonSize;
 		class?: ClassValue;
+		onclick?: () => void;
 		children?: Snippet;
 	}
 
-	let { variation, size = ButtonSize.MEDIUM, class: className, children }: Props = $props();
+	let { variation, size = ButtonSize.MEDIUM, class: className, onclick, children }: Props = $props();
 </script>
 
-<button class={['button', variation, size, className]}>{@render children?.()}</button>
+<button {onclick} class={['button', variation, size, className]}>{@render children?.()}</button>
 
 <style>
 	.button {

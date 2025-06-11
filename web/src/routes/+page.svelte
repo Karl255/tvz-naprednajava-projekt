@@ -3,21 +3,40 @@
 	import PinList from '$lib/components/PinList.svelte';
 	import PinMarker from '$lib/components/PinMarker.svelte';
 	import { ButtonSize, ButtonVariation } from '$lib/model/components';
-	import { type LngLatLike, type MapMouseEvent } from 'maplibre-gl';
+	import { type LngLat, type MapMouseEvent } from 'maplibre-gl';
 	import { MapLibre } from 'svelte-maplibre';
+	import type { PageProps } from './$types';
+	import type { PinDto } from '$lib/model/dto';
+	import { pinToLngLat } from '$lib/utils/model';
+	import { pinApi } from '$lib/api/pin.api';
 
-	const pins: [number, number][] = $state([[15.985, 45.8]]);
+	const { data }: PageProps = $props();
 
-	let selectedLocation: LngLatLike | null = $state(null);
+	const pins: PinDto[] = $state(data.pins);
+
+	let selectedLocation: LngLat | null = $state(null);
 
 	function selectLocation(e: MapMouseEvent) {
 		if (selectedLocation === null) {
 			selectedLocation = e.lngLat;
-
-			pins.push(e.lngLat.toArray());
 		} else {
 			selectedLocation = null;
 		}
+	}
+
+	async function reportIssue() {
+		if (selectedLocation === null) {
+			return;
+		}
+
+		const newPin = {
+			longitude: selectedLocation.lng,
+			latitude: selectedLocation.lat,
+		};
+
+		const pin = await pinApi.create(newPin);
+		selectedLocation = null;
+		pins.push(pin);
 	}
 </script>
 
@@ -36,14 +55,16 @@
 			onclick={selectLocation}
 		>
 			{#each pins as pin (pin)}
-				<PinMarker lngLat={pin} color="var(--color-primary)" />
+				<PinMarker lngLat={pinToLngLat(pin)} color="var(--color-primary)" />
 			{/each}
+
 			{#if selectedLocation !== null}
 				<PinMarker lngLat={selectedLocation} />
 			{/if}
 		</MapLibre>
 
-		<Button variation={ButtonVariation.PRIMARY_DARK} size={ButtonSize.LARGE} class="report-issue">+ Report issue</Button
+		<Button variation={ButtonVariation.PRIMARY_DARK} size={ButtonSize.LARGE} class="report-issue" onclick={reportIssue}
+			>+ Report issue</Button
 		>
 	</div>
 

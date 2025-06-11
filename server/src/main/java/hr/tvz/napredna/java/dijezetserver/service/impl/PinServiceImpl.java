@@ -15,11 +15,13 @@ import hr.tvz.napredna.java.dijezetserver.repository.PinRepository;
 import hr.tvz.napredna.java.dijezetserver.repository.StationRepository;
 import hr.tvz.napredna.java.dijezetserver.request.PinRequest;
 import hr.tvz.napredna.java.dijezetserver.service.PinService;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,8 +39,8 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public PinDto save(PinRequest pinRequest) {
-        Station station = stationRepository.findById(pinRequest.getStationId()).orElseThrow(() -> new EntityNotFoundException("Station does not exist"));
-        Line line = lineRepository.findById(pinRequest.getLineId()).orElseThrow(() -> new EntityNotFoundException("Line does not exist"));
+        Station station = resolveOptionalStation(pinRequest.getStationId()).orElse(null);
+        Line line = resolveOptionalLine(pinRequest.getLineId()).orElse(null);
 
         return toDto(pinRepository.save(toEntity(pinRequest, station, line, null)));
     }
@@ -47,8 +49,8 @@ public class PinServiceImpl implements PinService {
     public PinDto update(Long id, PinRequest pinRequest) {
         Pin existingPin = pinRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pin does not exist"));
 
-        Station station = stationRepository.findById(pinRequest.getStationId()).orElseThrow(() -> new EntityNotFoundException("Station does not exist"));
-        Line line = lineRepository.findById(pinRequest.getLineId()).orElseThrow(() -> new EntityNotFoundException("Line does not exist"));
+        Station station = resolveOptionalStation(pinRequest.getStationId()).orElse(null);
+        Line line = resolveOptionalLine(pinRequest.getLineId()).orElse(null);
 
         existingPin.setStation(station);
         existingPin.setLine(line);
@@ -65,9 +67,25 @@ public class PinServiceImpl implements PinService {
         pinRepository.delete(existingPin);
     }
 
+    private Optional<Station> resolveOptionalStation(@Nullable Long stationId) {
+        if (stationId == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(stationRepository.findById(stationId).orElseThrow(() -> new EntityNotFoundException("Station does not exist")));
+    }
+
+    private Optional<Line> resolveOptionalLine(@Nullable Long lineId) {
+        if (lineId == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(lineRepository.findById(lineId).orElseThrow(() -> new EntityNotFoundException("Line does not exist")));
+    }
+
     private PinDto toDto(Pin pin) {
-        StationDto stationDto = StationMapper.toDto(pin.getStation());
-        LineDto lineDto = LineMapper.toDto(pin.getLine());
+        StationDto stationDto = Optional.ofNullable(pin.getStation()).map(StationMapper::toDto).orElse(null);
+        LineDto lineDto = Optional.ofNullable(pin.getLine()).map(LineMapper::toDto).orElse(null);
         return PinMapper.toDto(pin, stationDto, lineDto);
     }
 

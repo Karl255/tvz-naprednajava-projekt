@@ -3,8 +3,8 @@ import type { PinDto } from '$lib/model/dto';
 import { ApiClient } from './api-client';
 
 interface PinRequest {
-	stationId: number;
-	lineId: number;
+	stationId?: number;
+	lineId?: number;
 	latitude: number;
 	longitude: number;
 }
@@ -22,8 +22,8 @@ class PinApi {
 
 	async update(pin: PinDto): Promise<PinDto> {
 		const pinData: PinRequest = {
-			stationId: pin.station.id,
-			lineId: pin.line.id,
+			stationId: pin.station?.id,
+			lineId: pin.line?.id,
 			latitude: pin.latitude,
 			longitude: pin.longitude,
 		};

@@ -18,8 +18,8 @@ export interface LineDto {
 
 export interface PinDto {
 	id: number;
-	station: StationDto;
-	line: LineDto;
+	station?: StationDto;
+	line?: LineDto;
 	latitude: number;
 	longitude: number;
 	user: string;
