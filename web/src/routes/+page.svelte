@@ -6,10 +6,11 @@
 	import { type LngLat, type MapMouseEvent } from 'maplibre-gl';
 	import { MapLibre } from 'svelte-maplibre';
 	import type { PageProps } from './$types';
-	import type { LineDto, PinDto, StationDto } from '$lib/model/dto';
+	import { IssueType, type LineDto, type PinDto, type StationDto } from '$lib/model/dto';
 	import { pinToLngLat } from '$lib/utils/model';
 	import { pinApi } from '$lib/api/pin.api';
 	import ReportIssueModal from '$lib/components/ReportIssueModal.svelte';
+	import { commentApi } from '$lib/api/comment.api';
 
 	const { data }: PageProps = $props();
 
@@ -39,6 +40,7 @@
 		};
 
 		const pin = await pinApi.create(newPin);
+		commentApi.create(comment, pin.id, IssueType.LATE, undefined);
 		selectedLocation = null;
 		pins.push(pin);
 	}
