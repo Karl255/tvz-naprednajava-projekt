@@ -22,6 +22,7 @@
 		background-color: var(--_bgc);
 		box-shadow: var(--shadow);
 		border: none;
+		border-radius: var(--border-radius);
 		cursor: pointer;
 
 		transition:

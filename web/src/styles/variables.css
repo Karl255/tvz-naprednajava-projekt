@@ -1,6 +1,10 @@
 :root {
     --color-primary: #1264ab;
+    --color-primary-light: #5c9dd6;
     --color-primary-dark: #204260;
+    --color-text-inverse: #f3f4f6;
+    
+    --border-radius: 3px;
     
     --shadow: 2px 4px 4px color(srgb 0 0 0 / 25%);
     --shadow-hover: 2px 4px 4px color(srgb 0 0 0 / 50%);

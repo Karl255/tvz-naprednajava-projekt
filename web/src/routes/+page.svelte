@@ -68,7 +68,7 @@
 		>
 	</div>
 
-	<PinList></PinList>
+	<PinList {pins}></PinList>
 </div>
 
 <style>
