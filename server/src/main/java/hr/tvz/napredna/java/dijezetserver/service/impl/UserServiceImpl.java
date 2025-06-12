@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
 
         UserRefreshToken refreshToken = existingRefreshToken.get();
 
-        if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+        if (refreshToken.getExpiresAt().isAfter(LocalDateTime.now())) {
             return existingRefreshToken.get().getRefreshToken();
         } else {
             userRefreshTokenRepository.delete(refreshToken);
