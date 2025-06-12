@@ -3,7 +3,9 @@ package hr.tvz.napredna.java.dijezetserver.service.impl;
 import hr.tvz.napredna.java.dijezetserver.dto.UserDto;
 import hr.tvz.napredna.java.dijezetserver.mapper.UserMapper;
 import hr.tvz.napredna.java.dijezetserver.model.User;
+import hr.tvz.napredna.java.dijezetserver.model.UserRefreshToken;
 import hr.tvz.napredna.java.dijezetserver.model.UserRole;
+import hr.tvz.napredna.java.dijezetserver.repository.UserRefreshTokenRepository;
 import hr.tvz.napredna.java.dijezetserver.repository.UserRepository;
 import hr.tvz.napredna.java.dijezetserver.request.UserRequest;
 import hr.tvz.napredna.java.dijezetserver.service.UserService;
@@ -12,14 +14,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -28,8 +33,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> getByUserName(String username) {
-        return userRepository.findByUsername(username);
+    public UserDto getByUserName(String username) {
+        return toDto(userRepository.findByUsername(username).orElseThrow(() -> new EntityNotFoundException("User " + username + " not found")));
     }
 
     @Override
@@ -73,6 +78,63 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.delete(existingUser.get());
+    }
+
+    @Override
+    public String getRefreshToken(String username) {
+        Optional<User> existingUser = userRepository.findByUsername(username);
+
+        if (existingUser.isEmpty()) {
+            throw new EntityNotFoundException("User with username " + username + " does not exist");
+        }
+
+        User user = existingUser.get();
+        Optional<UserRefreshToken> existingRefreshToken = userRefreshTokenRepository.findByUser(user);
+
+        if (existingRefreshToken.isEmpty()) {
+            return createNewRefreshToken(user);
+        }
+
+        UserRefreshToken refreshToken = existingRefreshToken.get();
+
+        if (refreshToken.getExpiresAt().isAfter(LocalDateTime.now())) {
+            return existingRefreshToken.get().getRefreshToken();
+        } else {
+            userRefreshTokenRepository.delete(refreshToken);
+            return createNewRefreshToken(user);
+        }
+    }
+
+    @Override
+    public UserDto getByRefreshToken(String token) {
+        Optional<UserRefreshToken> existingRefreshToken = userRefreshTokenRepository.findByRefreshToken(token);
+
+        if (existingRefreshToken.isEmpty()) {
+            throw new EntityNotFoundException("User with refresh token " + token + " does not exist");
+        }
+
+        UserRefreshToken refreshToken = existingRefreshToken.get();
+
+        if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
+            userRefreshTokenRepository.delete(refreshToken);
+            throw new IllegalArgumentException("Refresh token expired");
+        }
+
+        return toDto(refreshToken.getUser());
+    }
+
+    private String createNewRefreshToken(User existingUser) {
+        String refreshToken;
+        refreshToken = UUID.randomUUID().toString();
+
+        UserRefreshToken userRefreshToken = new UserRefreshToken(
+                null,
+                existingUser,
+                refreshToken,
+                LocalDateTime.now().plusHours(8));
+
+        userRefreshTokenRepository.save(userRefreshToken);
+        return refreshToken;
     }
 
     private UserDto toDto(User user) {

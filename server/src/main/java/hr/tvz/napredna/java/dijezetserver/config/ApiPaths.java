@@ -8,6 +8,7 @@ public final class ApiPaths {
   
     public static final String AUTH = BASE_API_URL + "/auth";
     public static final String LOGIN = AUTH + "/login";
+    public static final String REFRESH_TOKEN = AUTH + "/refresh-token";
     public static final String REGISTER = AUTH + "/register";
   
     public static final String LINE = BASE_API_URL + "/lines";

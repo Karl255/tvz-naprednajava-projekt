@@ -5,12 +5,11 @@ import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.UserRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
     List<UserDto> getAll();
 
-    Optional<User> getByUserName(String username);
+    UserDto getByUserName(String username);
 
     UserDto getProfile(User user);
 
@@ -19,4 +18,8 @@ public interface UserService {
     UserDto update(UserRequest userRequest);
 
     void delete(Long id);
+
+    String getRefreshToken(String username);
+
+    UserDto getByRefreshToken(String token);
 }

@@ -33,8 +33,15 @@ public final class JwtTokenCookieFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // Get authorization header and validate
-        Optional<Cookie> cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("token")).findFirst();
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Optional<Cookie> cookie = Arrays.stream(cookies)
+                .filter(c -> "token".equals(c.getName()))
+                .findFirst();
 
         if (cookie.isEmpty()) {
             filterChain.doFilter(request, response);
