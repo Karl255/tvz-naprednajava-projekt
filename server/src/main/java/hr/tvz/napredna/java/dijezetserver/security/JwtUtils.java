@@ -15,9 +15,18 @@ public class JwtUtils {
                 .claims().add("role", user.getRole()).and()
                 .subject(user.getUsername())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
+                .expiration(getTokenExpiration())
                 .signWith(key)
                 .compact();
+    }
+
+    /**
+     * Get exact time of token expiration (1h)
+     *
+     * @return token expiration time
+     */
+    private static Date getTokenExpiration() {
+        return new Date(System.currentTimeMillis() + 60 * 60 * 1000);
     }
 
     public static boolean validateToken(String token, SecretKey key) {
