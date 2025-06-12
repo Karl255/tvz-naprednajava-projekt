@@ -5,6 +5,9 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 
 @Configuration
@@ -33,15 +37,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtTokenCookieFilter jwtTokenFromCookieFilter() {
-        return new JwtTokenCookieFilter(userDetailsService, Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)));
+    public JwtTokenCookieFilter jwtTokenFromCookieFilter(SecretKey jwtSecretKey) {
+        return new JwtTokenCookieFilter(userDetailsService, jwtSecretKey);
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenCookieFilter jwtTokenFromCookieFilter) throws Exception {
         http.authorizeHttpRequests((authorize) ->
                 authorize
-                        .requestMatchers(ApiPaths.LOGIN, ApiPaths.REGISTER).permitAll()
+                        .requestMatchers(ApiPaths.LOGIN, ApiPaths.REGISTER, ApiPaths.REFRESH_TOKEN).permitAll()
                         .requestMatchers(ApiPaths.SWAGGER).permitAll()
                         .anyRequest().authenticated()
         ).csrf(AbstractHttpConfigurer::disable);
@@ -50,5 +54,18 @@ public class SecurityConfig {
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
+    }
+
+    @Bean
+    public SecretKey jwtSecretKey() {
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+        return new ProviderManager(authenticationProvider);
     }
 }
