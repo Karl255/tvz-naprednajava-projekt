@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 
 @RestController
 @Tag(name = "Authentication", description = "User login and registration")
@@ -45,6 +46,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("token", JwtUtils.createToken(user, jwtSecretKey))
                 .path(ApiPaths.BASE_API_URL)
+                .maxAge(Duration.ofHours(1))
                 .httpOnly(true)
                 .build();
 
@@ -61,6 +63,7 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("token", JwtUtils.createToken(user, jwtSecretKey))
                 .path(ApiPaths.BASE_API_URL)
+                .maxAge(Duration.ofHours(1))
                 .httpOnly(true)
                 .build();
 
