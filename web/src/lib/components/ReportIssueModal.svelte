@@ -32,40 +32,37 @@
 </script>
 
 <dialog bind:this={dialog} class="form">
-	<form></form>
-	<p class="header">Report issue</p>
+	<form onsubmit={report}>
+		<p class="header">Report issue</p>
 
-	<div class="form-group">
-		<label for="station">Station</label>
-		<select id="station" bind:value={station}>
-			{#each stations as station (station.id)}
-				<option value={station}>{station.name}</option>
-			{/each}
-		</select>
-	</div>
+		<div class="form-group">
+			<label for="station">Station</label>
+			<select id="station" bind:value={station}>
+				{#each stations as station (station.id)}
+					<option value={station}>{station.name}</option>
+				{/each}
+			</select>
+		</div>
 
-	<div class="form-group">
-		<label for="line">Line</label>
-		<select id="line" bind:value={line}>
-			{#each lines as line (line.id)}
-				<option value={line}>{line.name}</option>
-			{/each}
-		</select>
-	</div>
+		<div class="form-group">
+			<label for="line">Line</label>
+			<select id="line" bind:value={line}>
+				{#each lines as line (line.id)}
+					<option value={line}>{line.name}</option>
+				{/each}
+			</select>
+		</div>
 
-	<div class="form-group">
-		<label for="comment">Comment</label>
-		<textarea id="comment" bind:value={comment}></textarea>
-	</div>
+		<div class="form-group">
+			<label for="comment">Comment</label>
+			<textarea id="comment" bind:value={comment}></textarea>
+		</div>
 
-	<Button variation={ButtonVariation.PRIMARY_LIGHT} onclick={report} disabled={!isValid}>Report</Button>
+		<Button variation={ButtonVariation.PRIMARY_LIGHT} onclick={report} disabled={!isValid}>Report</Button>
+	</form>
 </dialog>
 
 <style>
-	dialog {
-		width: 320px;
-	}
-
 	form {
 		display: contents;
 	}

@@ -44,15 +44,17 @@
         border: none;
         border-radius: var(--border-radius);
         padding: 20px 30px;
+		width: 320px;
         
+        display: flex;
         flex-direction: column;
         gap: 21px;
         
         font-size: 20px;
         
-        &:is(dialog){
-            &[open] {
-                display: flex;
+        &:is(dialog) {
+            &:not(:open) {
+                display: none;
             }
             
             ::backdrop {
@@ -73,6 +75,7 @@
         gap: 7px;
     }
     
+    input,
     select,
     textarea {
         font: inherit;
