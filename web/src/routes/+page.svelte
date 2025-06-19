@@ -1,5 +1,6 @@
 <script lang="ts">
 	import LoginModal from '$lib/components/LoginForm.svelte';
+	import RegisterForm from '$lib/components/RegisterForm.svelte';
 </script>
 
 <div class="container">
@@ -7,11 +8,10 @@
 		<img src="/di-je-zet-logo.svg" alt="Di je ZET" height="240" />
 	</div>
 
-	<div class="modals">
+	<div class="forms">
 		<LoginModal />
+		<RegisterForm />
 	</div>
-
-	<div>extra</div>
 </div>
 
 <style>
@@ -35,5 +35,11 @@
 
 	.logo {
 		align-self: end;
+	}
+
+	.forms {
+		display: flex;
+		flex-direction: row;
+		gap: 20px;
 	}
 </style>
