@@ -2,6 +2,7 @@
     --color-primary: #1264ab;
     --color-primary-light: #5c9dd6;
     --color-primary-dark: #204260;
+    --color-error-text: #ff5151;
     
     --color-background: #f3f4f6;
     --color-text-inverse: var(--color-background);

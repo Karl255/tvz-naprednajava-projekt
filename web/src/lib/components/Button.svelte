@@ -20,42 +20,60 @@
 <style>
 	.button {
 		padding: 0.3em 0.6em;
+
+		color: var(--_clr);
 		background-color: var(--_bgc);
 		border: none;
+		border-color: var(--_border);
 		border-radius: var(--border-radius);
-		cursor: pointer;
 
 		font-size: 20px;
 		font-weight: 600;
 
+		cursor: pointer;
+
 		transition:
+			color 150ms ease-out,
 			background-color 150ms ease-out,
+			border-color 150ms ease-out,
 			box-shadow 150ms ease-out;
 
 		&.disabled {
 			pointer-events: none;
-			background-color: lch(from var(--_bgc) l calc(c - 20) h);
+			color: lch(from var(--_clr) l calc(c - 20) h / alpha);
+			background-color: lch(from var(--_bgc) l calc(c - 20) h / alpha);
+			border-color: lch(from var(--_border) l calc(c - 20) h / alpha);
 		}
 
 		&:hover {
-			background-color: lch(from var(--_bgc) calc(l - 10) c h);
+			color: lch(from var(--_clr) calc(l + 10) c h / alpha);
+			background-color: lch(from var(--_bgc) calc(l + 10) c h / alpha);
+			border-color: lch(from var(--_border) calc(l + 10) c h / alpha);
 			box-shadow: var(--shadow-hover);
 		}
 
 		:global {
 			&.primary {
-				color: white;
+				--_clr: white;
 				--_bgc: var(--color-primary);
 			}
 
 			&.primary-dark {
-				color: white;
+				--_clr: white;
 				--_bgc: var(--color-primary-dark);
 			}
 
 			&.primary-light {
-				color: var(--color-primary-dark);
+				--_clr: var(--color-primary-dark);
 				--_bgc: var(--color-primary-light);
+			}
+
+			&.secondary {
+				--_clr: var(--color-primary-light);
+				--_bgc: transparent;
+				--_border: var(--color-primary-light);
+				border-style: solid;
+				border-width: 2px;
 			}
 
 			&.large {
