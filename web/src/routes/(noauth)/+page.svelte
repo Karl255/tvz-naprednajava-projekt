@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { authApi } from '$lib/api/auth.api';
 	import LoginModal from '$lib/components/LoginForm.svelte';
 	import RegisterForm from '$lib/components/RegisterForm.svelte';
+	import { authService } from '$lib/services/auth.service';
 	import { tokenStore } from '$lib/stores/token.store';
 
 	let hasLoginError = $state(false);
@@ -17,7 +17,7 @@
 			return;
 		}
 
-		goto('/app');
+		authService.gotoApp();
 	}
 
 	async function onRegister(username: string, password: string) {
