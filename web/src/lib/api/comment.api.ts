@@ -12,7 +12,7 @@ interface CommentRequest {
 class CommentApi {
 	private readonly client = new ApiClient(API_PATH.COMMENT);
 
-	async findAll(): Promise<CommentDto[]> {
+	async findAllTopComments(): Promise<CommentDto[]> {
 		return await this.client.get<CommentDto[]>();
 	}
 

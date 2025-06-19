@@ -1,23 +1,23 @@
 <script lang="ts">
-	import type { PinDto } from '$lib/model/dto';
+	import type { CommentDto } from '$lib/model/dto';
 
 	interface Props {
-		pin: PinDto;
+		thread: CommentDto;
 	}
 
-	const { pin }: Props = $props();
+	const { thread }: Props = $props();
 </script>
 
 <div class="thread">
 	<div class="header">
-		<p class="username space-right">username {pin.user}</p>
-		{@render chip(`Line ${pin.line?.name}`)}
+		<p class="username space-right">{thread.user}</p>
+		{@render chip(`Line ${thread.pin.line?.name}`)}
 		{@render chip(`Type`)}
 	</div>
 
 	<div class="content">
-		<p class="space-right">Comment text.</p>
-		<p class="timestamp">2 min ago</p>
+		<p class="space-right">{thread.content}</p>
+		<p class="timestamp">{thread.createdAt}</p>
 	</div>
 
 	<div class="actions">
