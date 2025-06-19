@@ -6,4 +6,5 @@ export const API_PATH = {
 	LINE: BASE_PATH + '/lines',
 	STATION: BASE_PATH + '/stations',
 	AUTH: BASE_PATH + '/auth',
+	USER: BASE_PATH + '/users',
 };
