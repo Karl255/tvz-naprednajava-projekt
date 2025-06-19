@@ -38,11 +38,11 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
-    public PinDto save(PinRequest pinRequest) {
+    public PinDto save(PinRequest pinRequest, User user) {
         Station station = resolveOptionalStation(pinRequest.getStationId()).orElse(null);
         Line line = resolveOptionalLine(pinRequest.getLineId()).orElse(null);
 
-        return toDto(pinRepository.save(toEntity(pinRequest, station, line, null)));
+        return toDto(pinRepository.save(toEntity(pinRequest, station, line, user)));
     }
 
     @Override

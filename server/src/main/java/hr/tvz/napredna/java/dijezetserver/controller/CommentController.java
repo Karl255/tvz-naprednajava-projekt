@@ -2,6 +2,7 @@ package hr.tvz.napredna.java.dijezetserver.controller;
 
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.CommentDto;
+import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.CommentRequest;
 import hr.tvz.napredna.java.dijezetserver.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +36,9 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequest commentRequest, @AuthenticationPrincipal User user) {
         try {
-            return new ResponseEntity<>(commentService.create(commentRequest), HttpStatus.CREATED);
+            return new ResponseEntity<>(commentService.create(commentRequest, user), HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

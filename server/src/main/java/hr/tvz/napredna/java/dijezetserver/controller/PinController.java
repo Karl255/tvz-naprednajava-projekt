@@ -2,6 +2,7 @@ package hr.tvz.napredna.java.dijezetserver.controller;
 
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.PinDto;
+import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.PinRequest;
 import hr.tvz.napredna.java.dijezetserver.service.PinService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +36,9 @@ public class PinController {
     }
 
     @PostMapping
-    public ResponseEntity<PinDto> createPin(@RequestBody PinRequest pinRequest) {
+    public ResponseEntity<PinDto> createPin(@RequestBody PinRequest pinRequest, @AuthenticationPrincipal User user) {
         try {
-            return new ResponseEntity<>(pinService.save(pinRequest), HttpStatus.CREATED);
+            return new ResponseEntity<>(pinService.save(pinRequest, user), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
