@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { authApi } from '$lib/api/auth.api';
 	import LoginModal from '$lib/components/LoginForm.svelte';
 	import RegisterForm from '$lib/components/RegisterForm.svelte';
+	import { tokenStore } from '$lib/stores/token.store';
 
 	let hasLoginError = $state(false);
 	let hasRegisterError = $state(false);
@@ -9,10 +11,13 @@
 	async function onLogin(username: string, password: string) {
 		try {
 			const loginDto = await authApi.login(username, password);
-			console.log(loginDto);
+			tokenStore.setRefreshToken(loginDto.refreshToken);
 		} catch {
 			hasLoginError = true;
+			return;
 		}
+
+		goto('/app');
 	}
 
 	async function onRegister(username: string, password: string) {

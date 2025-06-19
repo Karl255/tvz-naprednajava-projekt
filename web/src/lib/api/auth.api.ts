@@ -7,8 +7,13 @@ interface UserRequest {
 	password: string;
 }
 
+interface RefreshTokenRequest {
+	token: string;
+}
+
 const LOGIN_ENDPOINT = '/login';
 const REGISTER_ENDPOINT = '/register';
+const REFRESH_TOKEN_ENDPOINT = '/refresh-token';
 
 class AuthApi {
 	private readonly client = new ApiClient(API_PATH.AUTH);
@@ -23,6 +28,12 @@ class AuthApi {
 		const data: UserRequest = { username, password };
 
 		await this.client.post(REGISTER_ENDPOINT, data);
+	}
+
+	async refreshToken(token: string): Promise<void> {
+		const data: RefreshTokenRequest = { token };
+
+		await this.client.post(REFRESH_TOKEN_ENDPOINT, data);
 	}
 }
 

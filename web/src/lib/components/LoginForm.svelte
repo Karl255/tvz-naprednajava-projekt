@@ -25,7 +25,7 @@
 
 	<div class="form-group">
 		<label for="username">Username</label>
-		<input type="password" id="username" bind:value={username} />
+		<input type="text" id="username" bind:value={username} />
 	</div>
 
 	<div class="form-group">
