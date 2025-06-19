@@ -39,9 +39,10 @@
 			lineId: line.id,
 		};
 
+		selectedLocation = null;
+
 		const pin = await pinApi.create(newPin);
 		const thread = await commentApi.create(comment, pin.id, IssueType.LATE, undefined);
-		selectedLocation = null;
 		threads.push(thread);
 	}
 

@@ -25,8 +25,8 @@
 
 	function report() {
 		if (station !== null && line !== null) {
-			dialog.close();
 			onReport(station, line, comment);
+			dialog.close();
 		}
 	}
 </script>
