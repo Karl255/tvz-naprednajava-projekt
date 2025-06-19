@@ -1,6 +1,27 @@
 <script lang="ts">
+	import { authApi } from '$lib/api/auth.api';
 	import LoginModal from '$lib/components/LoginForm.svelte';
 	import RegisterForm from '$lib/components/RegisterForm.svelte';
+
+	let hasLoginError = $state(false);
+	let hasRegisterError = $state(false);
+
+	async function onLogin(username: string, password: string) {
+		try {
+			const loginDto = await authApi.login(username, password);
+			console.log(loginDto);
+		} catch {
+			hasLoginError = true;
+		}
+	}
+
+	async function onRegister(username: string, password: string) {
+		try {
+			await authApi.register(username, password);
+		} catch {
+			hasRegisterError = true;
+		}
+	}
 </script>
 
 <div class="container">
@@ -9,8 +30,8 @@
 	</div>
 
 	<div class="forms">
-		<LoginModal />
-		<RegisterForm />
+		<LoginModal {onLogin} hasError={hasLoginError} />
+		<RegisterForm {onRegister} hasError={hasRegisterError} />
 	</div>
 </div>
 
@@ -40,6 +61,7 @@
 	.forms {
 		display: flex;
 		flex-direction: row;
+		align-items: start;
 		gap: 20px;
 	}
 </style>

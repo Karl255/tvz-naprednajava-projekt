@@ -23,11 +23,11 @@
         line-height: 1.2;
         font-weight: 400;
     }
-    
+
     p {
         margin: 0;
     }
-    
+
     button,
     select,
     label {
@@ -39,42 +39,48 @@
     .form {
         color: var(--color-text-inverse);
         background-color: var(--color-primary-dark);
-        box-shadow: var(--shadow);
-        
+
         border: none;
         border-radius: var(--border-radius);
         padding: 20px 30px;
 		width: 320px;
-        
+
         display: flex;
         flex-direction: column;
         gap: 21px;
-        
+
         font-size: 20px;
-        
+
         &:is(dialog) {
+            box-shadow: var(--shadow);
+
             &:not(:open) {
                 display: none;
             }
-            
+
             ::backdrop {
                 background-color: var(--color-backdrop);
             }
         }
-        
+
         .header {
             font-size: 36px;
             font-weight: 600;
             text-align: center;
         }
     }
-    
+
     .form-group {
         display: flex;
         flex-direction: column;
         gap: 7px;
     }
     
+    .form-error {
+        color: var(--color-error-text);
+        font-size: 14px;
+    }
+
     input,
     select,
     textarea {
