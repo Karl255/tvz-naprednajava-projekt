@@ -1,22 +1,11 @@
-import { tokenStore } from '$lib/stores/token.store';
-import { redirect } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 
-const { authApi } = await import('$lib/api/auth.api');
+const { authService } = await import('$lib/services/auth.service');
 
 export const load = (async () => {
-	const token = tokenStore.getRefreshToken();
+	const authenticated = await authService.refreshToken();
 
-	if (token === null) {
-		return;
+	if (!authenticated) {
+		authService.redirectToApp();
 	}
-
-	try {
-		await authApi.refreshToken(token);
-	} catch {
-		return;
-	}
-
-	console.log('refreshed token, should redirect to app');
-	redirect(302, '/app');
 }) satisfies LayoutLoad;

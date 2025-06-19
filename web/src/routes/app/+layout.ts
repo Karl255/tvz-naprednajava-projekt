@@ -1,18 +1,14 @@
-import type { UserDto } from '$lib/model/auth-dto';
-import { redirect } from '@sveltejs/kit';
 import type { LayoutLoad } from './$types';
 
-const { userApi } = await import('$lib/api/user.api');
+const { authService } = await import('$lib/services/auth.service');
 const { lineApi } = await import('$lib/api/line.api');
 const { stationApi } = await import('$lib/api/station.api');
 
 export const load = (async () => {
-	let user: UserDto | null = null;
+	const user = authService.getCurrentUser();
 
-	try {
-		user = await userApi.getCurrent();
-	} catch {
-		redirect(302, '/');
+	if (user === null) {
+		authService.redirectToLogin();
 	}
 
 	const lines = await lineApi.findAll();
