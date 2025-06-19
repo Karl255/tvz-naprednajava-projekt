@@ -1,6 +1,4 @@
-const url = new URL(window.location.href);
-url.port = '8080';
-const BASE_PATH = url.origin + '/di-je-zet/api';
+const BASE_PATH = '/di-je-zet/api';
 
 export const API_PATH = {
 	PIN: BASE_PATH + '/pins',
