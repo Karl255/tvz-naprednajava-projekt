@@ -6,10 +6,8 @@ import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.PinRequest;
 import hr.tvz.napredna.java.dijezetserver.service.PinService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,38 +30,25 @@ public class PinController {
     private final PinService pinService;
 
     @GetMapping
-    public ResponseEntity<List<PinDto>> getPins() {
-        return ResponseEntity.ok(pinService.findAll());
+    public List<PinDto> getPins() {
+        return pinService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<PinDto> createPin(@RequestBody PinRequest pinRequest, @AuthenticationPrincipal User user) {
-        try {
-            return new ResponseEntity<>(pinService.save(pinRequest, user), HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public PinDto createPin(@RequestBody PinRequest pinRequest, @AuthenticationPrincipal User user) {
+        return pinService.save(pinRequest, user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PinDto> updatePin(@PathVariable Long id, @RequestBody PinRequest pinRequest) {
-        try {
-            return new ResponseEntity<>(pinService.update(id, pinRequest), HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public PinDto updatePin(@PathVariable Long id, @RequestBody PinRequest pinRequest) {
+        return pinService.update(id, pinRequest);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePin(@PathVariable Long id) {
-        try {
-            pinService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePin(@PathVariable Long id) {
+        pinService.deleteById(id);
     }
 
 }

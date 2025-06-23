@@ -3,6 +3,7 @@ package hr.tvz.napredna.java.dijezetserver.controller;
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.LoginDto;
 import hr.tvz.napredna.java.dijezetserver.dto.UserDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.request.RefreshTokenRequest;
 import hr.tvz.napredna.java.dijezetserver.request.UserRequest;
 import hr.tvz.napredna.java.dijezetserver.security.JwtUtils;
@@ -37,7 +38,7 @@ public class AuthController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userRequest.getUsername(), userRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("Bad Credentials, try again!", e);
+            throw ApiException.unauthorized("Bad Credentials, try again!");
         }
 
         UserDto user = userService.getByUserName(userRequest.getUsername());
