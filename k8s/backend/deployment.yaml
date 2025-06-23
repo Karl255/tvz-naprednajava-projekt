@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dijezet-spring-backend
+  namespace: dijezetapp
+  labels:
+    app: dijezet-spring-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dijezet-spring-backend
+  template:
+    metadata:
+      labels:
+        app: dijezet-spring-backend
+    spec:
+      containers:
+        - name: dijezet-spring-backend
+          image: ghcr.io/karl255/tvz-naprednajava-projekt:latest
+          ports:
+            - containerPort: 8080
