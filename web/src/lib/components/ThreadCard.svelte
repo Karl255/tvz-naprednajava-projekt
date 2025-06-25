@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { CommentDto } from '$lib/model/dto';
 	import { getReplyCount } from '$lib/utils/comment.utils';
+	import { getMinutesAgo } from '$lib/utils/time.utils';
 	import Reply from './Reply.svelte';
 
 	interface Props {
@@ -35,7 +36,7 @@
 
 		<div class="content">
 			<p class="space-right">{thread.content}</p>
-			<p class="timestamp">{thread.createdAt}</p>
+			<p class="timestamp">{getMinutesAgo(thread.createdAt)} min ago</p>
 		</div>
 
 		<div class="actions">

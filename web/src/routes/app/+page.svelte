@@ -7,7 +7,7 @@
 	import { MapLibre } from 'svelte-maplibre';
 	import type { PageProps } from './$types';
 	import { IssueType, type CommentDto, type LineDto, type StationDto } from '$lib/model/dto';
-	import { pinToLngLat } from '$lib/utils/model';
+	import { pinToLngLat } from '$lib/utils/model.utils';
 	import { pinApi } from '$lib/api/pin.api';
 	import ReportIssueModal from '$lib/components/ReportIssueModal.svelte';
 	import { commentApi } from '$lib/api/comment.api';
