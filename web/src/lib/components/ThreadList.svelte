@@ -4,15 +4,16 @@
 
 	interface Props {
 		threads: CommentDto[];
+		onThreadReply: (thread: CommentDto, comment: string) => void;
 	}
 
-	const { threads }: Props = $props();
+	const { threads, onThreadReply }: Props = $props();
 </script>
 
 <div class="container">
 	<div class="threads">
 		{#each threads as thread (thread.id)}
-			<ThreadCard {thread} />
+			<ThreadCard {thread} {onThreadReply} />
 		{/each}
 	</div>
 </div>

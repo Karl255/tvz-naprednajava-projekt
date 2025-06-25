@@ -6,7 +6,7 @@ interface CommentRequest {
 	content: string;
 	pinId: number;
 	parentId?: number;
-	issueType: IssueType;
+	issueType: IssueType | null;
 }
 
 class CommentApi {
@@ -16,7 +16,7 @@ class CommentApi {
 		return await this.client.get<CommentDto[]>();
 	}
 
-	async create(content: string, pinId: number, issueType: IssueType, parentId?: number): Promise<CommentDto> {
+	async create(content: string, pinId: number, issueType: IssueType | null, parentId?: number): Promise<CommentDto> {
 		const commentRequest: CommentRequest = {
 			content,
 			pinId,

@@ -90,4 +90,15 @@
         border-radius: var(--border-radius);
         padding: 10px 15px;
     }
+    
+    button.text {
+        color: inherit;
+        font: inherit;
+        background: none;
+        border: none;
+        padding: 0;
+        
+        cursor: pointer;
+        text-decoration: underline;
+    }
 }

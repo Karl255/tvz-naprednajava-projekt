@@ -49,6 +49,12 @@
 	async function openReportModal() {
 		reportIssueModal.open();
 	}
+
+	async function sendThreadReply(thread: CommentDto, comment: string) {
+		const reply = await commentApi.create(comment, thread.pin.id, null, thread.id);
+
+		threads.find(t => t.id === thread.id)?.replies.push(reply);
+	}
 </script>
 
 <div class="container">
@@ -82,7 +88,7 @@
 		>
 	</div>
 
-	<PinList {threads} />
+	<PinList {threads} onThreadReply={sendThreadReply} />
 </div>
 
 <ReportIssueModal bind:this={reportIssueModal} stations={data.stations} lines={data.lines} onReport={reportIssue} />
