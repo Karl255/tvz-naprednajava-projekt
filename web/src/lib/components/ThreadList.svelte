@@ -4,7 +4,7 @@
 
 	interface Props {
 		threads: CommentDto[];
-		onThreadReply: (thread: CommentDto, comment: string) => void;
+		onThreadReply: (thread: CommentDto, comment: string) => Promise<void>;
 	}
 
 	const { threads, onThreadReply }: Props = $props();

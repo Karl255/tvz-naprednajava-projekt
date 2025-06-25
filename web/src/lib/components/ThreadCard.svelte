@@ -1,24 +1,27 @@
 <script lang="ts">
 	import type { CommentDto } from '$lib/model/dto';
 	import { getReplyCount } from '$lib/utils/comment.utils';
+	import Reply from './Reply.svelte';
 
 	interface Props {
 		thread: CommentDto;
-		onThreadReply: (thread: CommentDto, comment: string) => void;
+		onThreadReply: (thread: CommentDto, comment: string) => Promise<void>;
 	}
 
 	const { thread, onThreadReply: onSendReply }: Props = $props();
 
+	let isExpanded = $state(false);
 	let replyComment: string | null = $state(null);
 
 	const replyCount = $derived(getReplyCount(thread));
 
-	function sendReply() {
+	async function sendReply() {
 		if (replyComment === null || replyComment.length === 0) {
 			return;
 		}
 
-		onSendReply(thread, replyComment);
+		await onSendReply(thread, replyComment);
+		replyComment = null;
 	}
 </script>
 
@@ -38,7 +41,12 @@
 		<div class="actions">
 			<p class="space-right">
 				{#if replyCount > 0}
-					<button class="text">Expand {replyCount > 0 ? `(${replyCount})` : ''}</button>
+					{@const buttonText = isExpanded ? 'Collapse' : 'Expand'}
+
+					<button class="text" onclick={() => (isExpanded = !isExpanded)}>
+						{buttonText}
+						{replyCount > 0 ? `(${replyCount})` : ''}
+					</button>
 				{/if}
 			</p>
 			<p>
@@ -55,6 +63,14 @@
 		<div class="card reply">
 			<input type="text" bind:value={replyComment} />
 			<button class="text" onclick={sendReply}>Send</button>
+		</div>
+	{/if}
+
+	{#if isExpanded}
+		<div class="card replies">
+			{#each thread.replies as reply (reply.id)}
+				<Reply comment={reply} />
+			{/each}
 		</div>
 	{/if}
 </div>
@@ -121,5 +137,11 @@
 
 			padding: 2px;
 		}
+	}
+
+	.replies {
+		display: flex;
+		flex-direction: column;
+		gap: 7px;
 	}
 </style>
