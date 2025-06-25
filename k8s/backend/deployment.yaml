@@ -20,3 +20,6 @@ spec:
           image: ghcr.io/karl255/tvz-naprednajava-projekt:80b1efec59801d0c21d2718961965a05d835af9f
           ports:
             - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
