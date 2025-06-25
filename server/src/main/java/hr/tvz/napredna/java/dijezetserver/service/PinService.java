@@ -4,6 +4,7 @@ import hr.tvz.napredna.java.dijezetserver.dto.PinDto;
 import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.PinRequest;
 
+import java.time.Instant;
 import java.util.List;
 
 public interface PinService {
@@ -14,4 +15,6 @@ public interface PinService {
     PinDto update(Long id, PinRequest lineDto);
 
     void deleteById(Long id);
+
+    void deleteByIds(List<Long> ids);
 }

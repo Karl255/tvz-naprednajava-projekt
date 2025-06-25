@@ -21,6 +21,7 @@ import hr.tvz.napredna.java.dijezetserver.service.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -36,6 +37,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> findAll() {
         return commentRepository.findByParentCommentIsNull().stream().map(this::toCommentDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CommentDto> findAllBefore(LocalDateTime timestamp) {
+        return commentRepository.findByParentCommentIsNullAndCreatedAtIsBefore(timestamp).stream().map(this::toCommentDto).collect(Collectors.toList());
     }
 
     @Override
@@ -63,6 +69,11 @@ public class CommentServiceImpl implements CommentService {
         Comment existingComment = commentRepository.findById(id).orElseThrow(prepareCommentNotFoundException(id));
 
         commentRepository.delete(existingComment);
+    }
+
+    @Override
+    public void deleteByPinIds(List<Long> pinIds) {
+        commentRepository.deleteAllByPinIdIn(pinIds);
     }
 
     private CommentDto toCommentDto(Comment comment) {
