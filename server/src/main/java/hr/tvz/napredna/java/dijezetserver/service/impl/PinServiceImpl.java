@@ -21,6 +21,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,6 +67,11 @@ public class PinServiceImpl implements PinService {
         Pin existingPin = pinRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pin does not exist"));
 
         pinRepository.delete(existingPin);
+    }
+
+    @Override
+    public void deleteByIds(List<Long> ids) {
+        pinRepository.deleteAllById(ids);
     }
 
     private Optional<Station> resolveOptionalStation(@Nullable Long stationId) {
