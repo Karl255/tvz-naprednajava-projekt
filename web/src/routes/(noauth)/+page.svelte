@@ -22,8 +22,14 @@
 
 	async function onRegister(username: string, password: string) {
 		try {
+			console.log('registering');
 			await authApi.register(username, password);
+			console.log('register success');
+			const loginDto = await authApi.login(username, password);
+			tokenStore.setRefreshToken(loginDto.refreshToken);
+			authService.gotoApp();
 		} catch {
+			console.log('register FAIL');
 			hasRegisterError = true;
 		}
 	}
