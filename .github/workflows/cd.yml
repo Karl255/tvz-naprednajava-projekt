@@ -1,0 +1,56 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches:
+      - master
+    types:
+      - completed
+
+env:
+  FRONTEND_IMAGE_TAG: ghcr.io/karl255/dijezet-frontend:${{ github.sha }}
+  BACKEND_IMAGE_TAG: ghcr.io/karl255/tvz-naprednajava-projekt:${{ github.sha }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build + push frontend image
+        run: |
+          docker build -t $FRONTEND_IMAGE_TAG -f web/Dockerfile .
+          docker push $FRONTEND_IMAGE_TAG
+
+      - name: Build + push backend image
+        run: |
+          docker build -t $BACKEND_IMAGE_TAG -f server/Dockerfile .
+          docker push $BACKEND_IMAGE_TAG
+
+      - name: Update image tags in manifests
+        run: |
+          sed -i "s|image: ghcr.io/karl255/dijezet-frontend:.*|image: $FRONTEND_IMAGE_TAG|" k8s/frontend/deployment.yaml
+          sed -i "s|image: ghcr.io/karl255/tvz-naprednajava-projekt:.*|image: $BACKEND_IMAGE_TAG|" k8s/backend/deployment.yaml
+
+      - name: Commit and push updated manifests
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add k8s/frontend/deployment.yaml k8s/backend/deployment.yaml
+          git commit -m "Update image tags: $GITHUB_SHA"
+          git push
+
+      - name: Trigger Argo CD Webhook
+        run: |
+          curl -X POST https://argocd.mario-kopjar.from.hr/api/webhook \
+               -H "Content-Type: application/json" \
+               -d '{"repository": {"full_name": "${{ github.repository }}"}}'
+  

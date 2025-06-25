@@ -3,9 +3,13 @@ import type { LayoutLoad } from './$types';
 const { authService } = await import('$lib/services/auth.service');
 
 export const load = (async () => {
-	const authenticated = await authService.refreshToken();
+	try {
+		const authenticated = await authService.refreshToken();
 
-	if (!authenticated) {
-		authService.redirectToApp();
+		if (!authenticated) {
+			authService.redirectToApp();
+		}
+	} catch {
+		//
 	}
 }) satisfies LayoutLoad;

@@ -1,6 +1,7 @@
 package hr.tvz.napredna.java.dijezetserver.service.impl;
 
 import hr.tvz.napredna.java.dijezetserver.dto.UserDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.mapper.UserMapper;
 import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.model.UserRefreshToken;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findByUsername(userRequest.getUsername());
 
         if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("Username " + userRequest.getUsername() + " already exists");
+            throw ApiException.badRequest("Username " + userRequest.getUsername() + " already exists");
         }
 
         User newUser = UserMapper.toEntity(userRequest.getUsername(), passwordEncoder.encode(userRequest.getPassword()), UserRole.USER);
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findByUsername(userRequest.getUsername());
 
         if (existingUser.isEmpty()) {
-            throw new EntityNotFoundException("Username " + userRequest.getUsername() + " does not exist");
+            throw ApiException.notFound("Username " + userRequest.getUsername() + " does not exist");
         }
 
         User newUser = existingUser.get();
@@ -74,7 +75,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findById(id);
 
         if (existingUser.isEmpty()) {
-            throw new EntityNotFoundException("User with ID " + id + " does not exist");
+            throw ApiException.notFound("User with ID " + id + " does not exist");
         }
 
         userRepository.delete(existingUser.get());
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> existingUser = userRepository.findByUsername(username);
 
         if (existingUser.isEmpty()) {
-            throw new EntityNotFoundException("User with username " + username + " does not exist");
+            throw ApiException.notFound("User with username " + username + " does not exist");
         }
 
         User user = existingUser.get();
@@ -110,14 +111,14 @@ public class UserServiceImpl implements UserService {
         Optional<UserRefreshToken> existingRefreshToken = userRefreshTokenRepository.findByRefreshToken(token);
 
         if (existingRefreshToken.isEmpty()) {
-            throw new EntityNotFoundException("User with refresh token " + token + " does not exist");
+            throw ApiException.notFound("User with refresh token " + token + " does not exist");
         }
 
         UserRefreshToken refreshToken = existingRefreshToken.get();
 
         if (refreshToken.getExpiresAt().isBefore(LocalDateTime.now())) {
             userRefreshTokenRepository.delete(refreshToken);
-            throw new IllegalArgumentException("Refresh token expired");
+            throw ApiException.unauthorized("Refresh token expired");
         }
 
         return toDto(refreshToken.getUser());

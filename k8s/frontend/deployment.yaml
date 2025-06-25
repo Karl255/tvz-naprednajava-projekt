@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dijezet-frontend
+  namespace: dijezetapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dijezet-frontend
+  template:
+    metadata:
+      labels:
+        app: dijezet-frontend
+    spec:
+      containers:
+        - name: nginx
+          image: ghcr.io/karl255/dijezet-frontend:dadde5d5f0a0be7c5187e686637400856b6b7d04
+          ports:
+            - containerPort: 80

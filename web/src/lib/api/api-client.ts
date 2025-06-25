@@ -31,7 +31,7 @@ export class ApiClient {
 		return await this.doJsonRequest<T>('DELETE', path, data);
 	}
 
-	private async doJsonRequest<T>(method: string, path: string, data?: object) {
+	private async doJsonRequest<T>(method: string, path: string, data?: object): Promise<T> {
 		const url = this.basePath + path;
 		const requestInit: RequestInit = { method, headers: JSON_HEADERS };
 
