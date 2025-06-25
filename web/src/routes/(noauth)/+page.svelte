@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { authApi } from '$lib/api/auth.api';
+	import LocaleSelector from '$lib/components/LocaleSelector.svelte';
 	import LoginModal from '$lib/components/LoginForm.svelte';
 	import RegisterForm from '$lib/components/RegisterForm.svelte';
+	import { ButtonVariation } from '$lib/model/components';
 	import { authService } from '$lib/services/auth.service';
 	import { tokenStore } from '$lib/stores/token.store';
 
@@ -46,6 +48,10 @@
 	</div>
 </div>
 
+<div class="locale">
+	<LocaleSelector buttonVariation={ButtonVariation.PRIMARY_DARK} />
+</div>
+
 <style>
 	:global(html) {
 		overflow: hidden;
@@ -74,5 +80,10 @@
 		flex-direction: row;
 		align-items: start;
 		gap: 20px;
+	}
+
+	.locale {
+		position: absolute;
+		inset: 1rem 1rem auto auto;
 	}
 </style>

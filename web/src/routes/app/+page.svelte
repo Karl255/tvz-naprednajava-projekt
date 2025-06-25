@@ -11,6 +11,8 @@
 	import { pinApi } from '$lib/api/pin.api';
 	import ReportIssueModal from '$lib/components/ReportIssueModal.svelte';
 	import { commentApi } from '$lib/api/comment.api';
+	import { i18n } from '$lib/i18n';
+	import LocaleSelector from '$lib/components/LocaleSelector.svelte';
 
 	const { data }: PageProps = $props();
 
@@ -84,8 +86,12 @@
 			variation={ButtonVariation.PRIMARY_DARK}
 			size={ButtonSize.LARGE}
 			class="report-issue"
-			onclick={openReportModal}>+ Report issue</Button
+			onclick={openReportModal}>+ {i18n.t('reportIssue')}</Button
 		>
+
+		<div class="locale">
+			<LocaleSelector />
+		</div>
 	</div>
 
 	<PinList {threads} onThreadReply={sendThreadReply} />
@@ -117,5 +123,10 @@
 	:global(.report-issue) {
 		position: absolute;
 		inset: auto 2rem 2rem auto;
+	}
+
+	.locale {
+		position: absolute;
+		inset: 1rem 1rem auto auto;
 	}
 </style>

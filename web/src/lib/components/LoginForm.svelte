@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { i18n } from '$lib/i18n';
 	import { ButtonVariation } from '$lib/model/components';
 	import Button from './Button.svelte';
 
@@ -21,21 +22,21 @@
 </script>
 
 <form class="form">
-	<p class="header">Login</p>
+	<p class="header">{i18n.t('login')}</p>
 
 	<div class="form-group">
-		<label for="username">Username</label>
+		<label for="username">{i18n.t('username')}</label>
 		<input type="text" id="username" bind:value={username} />
 	</div>
 
 	<div class="form-group">
-		<label for="password">Password</label>
+		<label for="password">{i18n.t('password')}</label>
 		<input type="password" id="password" bind:value={password} />
 	</div>
 
-	<Button variation={ButtonVariation.PRIMARY_LIGHT} onclick={login} disabled={!isValid}>Login</Button>
+	<Button variation={ButtonVariation.PRIMARY_LIGHT} onclick={login} disabled={!isValid}>{i18n.t('login')}</Button>
 
 	{#if hasError}
-		<p class="form-error">Failed to login</p>
+		<p class="form-error">{i18n.t('failedToLogin')}</p>
 	{/if}
 </form>

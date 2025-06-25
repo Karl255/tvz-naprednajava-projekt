@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { i18n } from '$lib/i18n';
 	import { ButtonVariation } from '$lib/model/components';
 	import Button from './Button.svelte';
 
@@ -20,26 +21,26 @@
 </script>
 
 <form class="form">
-	<p class="header">Register</p>
+	<p class="header">{i18n.t('register')}</p>
 
 	<div class="form-group">
-		<label for="username">Username</label>
+		<label for="username">{i18n.t('username')}</label>
 		<input type="text" id="username" bind:value={username} />
 	</div>
 
 	<div class="form-group">
-		<label for="password">Password</label>
+		<label for="password">{i18n.t('password')}</label>
 		<input type="password" id="password" bind:value={password} />
 	</div>
 
 	<div class="form-group">
-		<label for="password">Repeat password</label>
+		<label for="password">{i18n.t('confirmPassword')}</label>
 		<input type="password" id="password" bind:value={repeatedPassword} />
 	</div>
 
-	<Button variation={ButtonVariation.SECONDARY} onclick={register} disabled={!isValid}>Register</Button>
+	<Button variation={ButtonVariation.SECONDARY} onclick={register} disabled={!isValid}>{i18n.t('register')}</Button>
 
 	{#if hasError}
-		<p class="form-error">Failed to register</p>
+		<p class="form-error">{i18n.t('failedToRegister')}</p>
 	{/if}
 </form>

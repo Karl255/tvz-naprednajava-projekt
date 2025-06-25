@@ -1,3 +1,4 @@
+import { i18n } from '$lib/i18n';
 import { Temporal } from '@js-temporal/polyfill';
 
 function getMinutesAgo(isoTimestamp: string): number {
@@ -11,5 +12,5 @@ function getMinutesAgo(isoTimestamp: string): number {
 export function getMinutesAgoText(isoTimestamp: string): string {
 	const minutesAgo = getMinutesAgo(isoTimestamp);
 
-	return minutesAgo === 0 ? 'Now' : `${minutesAgo} min ago`;
+	return minutesAgo === 0 ? 'Now' : i18n.t('minAgo', { minutes: 'MIN' });
 }

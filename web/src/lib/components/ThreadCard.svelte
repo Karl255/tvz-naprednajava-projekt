@@ -4,6 +4,7 @@
 	import { getReplyCount } from '$lib/utils/comment.utils';
 	import { getMinutesAgoText } from '$lib/utils/time.utils';
 	import Reply from './Reply.svelte';
+	import { i18n } from '$lib/i18n';
 
 	interface Props {
 		thread: CommentDto;
@@ -33,7 +34,7 @@
 	<div class="card pin">
 		<div class="header">
 			<p class="username space-right">{thread.user}</p>
-			{@render chip(`Line ${thread.pin.line?.name}`)}
+			{@render chip(i18n.t('lineNumber', { lineNumber: thread.pin.line?.name }))}
 			{@render chip(type?.text ?? '')}
 		</div>
 
@@ -45,7 +46,7 @@
 		<div class="actions">
 			<p class="space-right">
 				{#if replyCount > 0}
-					{@const buttonText = isExpanded ? 'Collapse' : 'Expand'}
+					{@const buttonText = isExpanded ? i18n.t('collapse') : i18n.t('expand')}
 
 					<button class="text" onclick={() => (isExpanded = !isExpanded)}>
 						{buttonText}
