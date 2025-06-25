@@ -81,6 +81,10 @@
 				box-shadow: var(--shadow);
 				font-weight: 600;
 			}
+
+			&.small {
+				font-size: 16px;
+			}
 		}
 	}
 </style>

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { setLocale } from '$lib/i18n';
 	import type { PinDto } from '$lib/model/dto';
 	import ThreadCard from './ThreadCard.svelte';
 
@@ -11,11 +10,6 @@
 </script>
 
 <div class="container">
-	<div>
-		<button onclick={() => setLocale('en')}>EN</button>
-		<button onclick={() => setLocale('hr')}>HR</button>
-	</div>
-
 	<div class="threads">
 		{#each pins as pin (pin.id)}
 			<ThreadCard {pin} />

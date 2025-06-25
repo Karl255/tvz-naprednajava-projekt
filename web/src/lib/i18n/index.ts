@@ -1,5 +1,10 @@
 import { I18n } from 'i18n-js';
 
+export const LOCALES = ['en', 'hr'];
+type Locale = (typeof LOCALES)[keyof typeof LOCALES];
+
+const DEFAULT_LOCALE = 'en' satisfies Locale;
+
 export const i18n = new I18n({
 	en: {
 		username: 'Username',
@@ -45,10 +50,14 @@ export const i18n = new I18n({
 	},
 });
 
-i18n.locale = localStorage.getItem('locale') ?? 'en';
+i18n.locale = localStorage.getItem('locale') ?? DEFAULT_LOCALE;
 
 export function setLocale(locale: string) {
 	i18n.locale = locale;
 	localStorage.setItem('locale', locale);
 	window.location.reload();
+}
+
+export function getLocale(): string {
+	return localStorage.getItem('locale') ?? DEFAULT_LOCALE;
 }
