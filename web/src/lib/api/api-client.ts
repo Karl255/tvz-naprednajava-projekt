@@ -29,7 +29,7 @@ export class ApiClient {
 		return await this.doJsonRequest<T>('DELETE', path, data);
 	}
 
-	private async doJsonRequest<T>(method: string, path: string, data?: object) {
+	private async doJsonRequest<T>(method: string, path: string, data?: object): Promise<T> {
 		const url = this.basePath + path;
 		const requestInit: RequestInit = { method, headers: JSON_HEADERS };
 
@@ -38,7 +38,11 @@ export class ApiClient {
 		}
 
 		const response = await fetch(url, requestInit);
-		return await this.getResponseJson<T>(response);
+		try {
+			return await this.getResponseJson<T>(response);
+		} catch {
+			return null as T;
+		}
 	}
 
 	private async getResponseJson<T>(response: Response) {
