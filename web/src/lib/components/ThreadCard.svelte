@@ -2,7 +2,7 @@
 	import { ISSUE_TYPES } from '$lib/constants/issue-types';
 	import type { CommentDto } from '$lib/model/dto';
 	import { getReplyCount } from '$lib/utils/comment.utils';
-	import { getMinutesAgo } from '$lib/utils/time.utils';
+	import { getMinutesAgoText } from '$lib/utils/time.utils';
 	import Reply from './Reply.svelte';
 
 	interface Props {
@@ -34,12 +34,12 @@
 		<div class="header">
 			<p class="username space-right">{thread.user}</p>
 			{@render chip(`Line ${thread.pin.line?.name}`)}
-			{@render chip(type?.text)}
+			{@render chip(type?.text ?? '')}
 		</div>
 
 		<div class="content">
 			<p class="space-right">{thread.content}</p>
-			<p class="timestamp">{getMinutesAgo(thread.createdAt)} min ago</p>
+			<p class="timestamp">{getMinutesAgoText(thread.createdAt)}</p>
 		</div>
 
 		<div class="actions">

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Self from './Reply.svelte';
 	import type { CommentDto } from '$lib/model/dto';
-	import { getMinutesAgo } from '$lib/utils/time.utils';
+	import { getMinutesAgoText } from '$lib/utils/time.utils';
 
 	interface Props {
 		comment: CommentDto;
@@ -27,7 +27,7 @@
 	<div class="comment">
 		<div class="line">
 			<p class="username">{comment.user}</p>
-			<div class="timestamp">{getMinutesAgo(comment.createdAt)} min ago</div>
+			<div class="timestamp">{getMinutesAgoText(comment.createdAt)}</div>
 		</div>
 		<div class="line">
 			<p>{comment.content}</p>
