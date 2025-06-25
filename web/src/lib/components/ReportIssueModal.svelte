@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { ISSUE_TYPES } from '$lib/constants/issue-types';
 	import { ButtonVariation } from '$lib/model/components';
-	import type { LineDto, StationDto } from '$lib/model/dto';
+	import { IssueType, type LineDto, type StationDto } from '$lib/model/dto';
 	import Button from './Button.svelte';
 
 	interface Props {
-		onReport: (station: StationDto, line: LineDto, comment: string) => void;
+		onReport: (issueType: IssueType, station: StationDto, line: LineDto, comment: string) => void;
 		stations: StationDto[];
 		lines: LineDto[];
 	}
@@ -13,19 +14,20 @@
 
 	let dialog: HTMLDialogElement;
 
+	let issue: IssueType | null = $state(null);
 	let station: StationDto | null = $state(null);
 	let line: LineDto | null = $state(null);
 	let comment: string = $state('');
 
-	let isValid = $derived(station !== null && line !== null && comment.length > 0);
+	let isValid = $derived(issue !== null && station !== null && line !== null && comment.length > 0);
 
 	export function open() {
 		dialog.showModal();
 	}
 
 	function report() {
-		if (station !== null && line !== null) {
-			onReport(station, line, comment);
+		if (issue !== null && station !== null && line !== null) {
+			onReport(issue, station, line, comment);
 			dialog.close();
 		}
 	}
@@ -34,6 +36,15 @@
 <dialog bind:this={dialog} class="form">
 	<form onsubmit={report}>
 		<p class="header">Report issue</p>
+
+		<div class="form-group">
+			<label for="station">Issue</label>
+			<select id="station" bind:value={issue}>
+				{#each ISSUE_TYPES as option (option.value)}
+					<option value={option.value}>{option.text}</option>
+				{/each}
+			</select>
+		</div>
 
 		<div class="form-group">
 			<label for="station">Station</label>

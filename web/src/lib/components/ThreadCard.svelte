@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { ISSUE_TYPES } from '$lib/constants/issue-types';
 	import type { CommentDto } from '$lib/model/dto';
 	import { getReplyCount } from '$lib/utils/comment.utils';
 	import { getMinutesAgo } from '$lib/utils/time.utils';
@@ -10,6 +11,7 @@
 	}
 
 	const { thread, onThreadReply: onSendReply }: Props = $props();
+	const type = ISSUE_TYPES.find(type => type.value === thread.issueType);
 
 	let isExpanded = $state(false);
 	let replyComment: string | null = $state(null);
@@ -32,7 +34,7 @@
 		<div class="header">
 			<p class="username space-right">{thread.user}</p>
 			{@render chip(`Line ${thread.pin.line?.name}`)}
-			{@render chip(`Type`)}
+			{@render chip(type?.text)}
 		</div>
 
 		<div class="content">

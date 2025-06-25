@@ -27,7 +27,7 @@
 		}
 	}
 
-	async function reportIssue(station: StationDto, line: LineDto, comment: string) {
+	async function reportIssue(issueType: IssueType, station: StationDto, line: LineDto, comment: string) {
 		if (selectedLocation === null) {
 			return;
 		}
@@ -42,7 +42,7 @@
 		selectedLocation = null;
 
 		const pin = await pinApi.create(newPin);
-		const thread = await commentApi.create(comment, pin.id, IssueType.LATE, undefined);
+		const thread = await commentApi.create(comment, pin.id, issueType, undefined);
 		threads.push(thread);
 	}
 
