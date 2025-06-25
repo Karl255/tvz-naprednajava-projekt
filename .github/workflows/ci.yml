@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+
+env:
+  FRONTEND_IMAGE_TAG: ghcr.io/karl255/dijezet-frontend:${{ github.sha }}
+  BACKEND_IMAGE_TAG: ghcr.io/karl255/tvz-naprednajava-projekt:${{ github.sha }}
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Build SvelteKit
+        run: |
+          npm ci --prefix web
+          npm run build --prefix web
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '24'
+
+      - name: Cache Maven deps
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('server/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven
+
+      - name: Make mvnw executable
+        run: chmod +x server/mvnw
+
+      - name: Run backend tests
+        working-directory: server
+        run: ./mvnw clean verify
