@@ -56,9 +56,9 @@
 			</p>
 			<p>
 				{#if replyComment === null}
-					<button class="text" onclick={() => (replyComment = '')}>Reply</button>
+					<button class="text" onclick={() => (replyComment = '')}>{i18n.t('reply')}</button>
 				{:else}
-					<button class="text" onclick={() => (replyComment = null)}>Cancel</button>
+					<button class="text" onclick={() => (replyComment = null)}>{i18n.t('cancel')}</button>
 				{/if}
 			</p>
 		</div>
@@ -67,7 +67,7 @@
 	{#if replyComment !== null}
 		<div class="card reply">
 			<input type="text" bind:value={replyComment} />
-			<button class="text" disabled={!isReplyValid} onclick={sendReply}>Send</button>
+			<button class="text" disabled={!isReplyValid} onclick={sendReply}>{i18n.t('send')}</button>
 		</div>
 	{/if}
 

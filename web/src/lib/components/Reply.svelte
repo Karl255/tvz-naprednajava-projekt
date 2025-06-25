@@ -2,6 +2,7 @@
 	import Self from './Reply.svelte';
 	import type { CommentDto } from '$lib/model/dto';
 	import { getMinutesAgoText } from '$lib/utils/time.utils';
+	import { i18n } from '$lib/i18n';
 
 	interface Props {
 		comment: CommentDto;
@@ -33,9 +34,9 @@
 			<p>{comment.content}</p>
 
 			{#if replyComment === null}
-				<button class="text small" onclick={() => (replyComment = '')}>Reply</button>
+				<button class="text small" onclick={() => (replyComment = '')}>{i18n.t('reply')}</button>
 			{:else}
-				<button class="text small" onclick={() => (replyComment = null)}>Cancel</button>
+				<button class="text small" onclick={() => (replyComment = null)}>{i18n.t('cancel')}</button>
 			{/if}
 		</div>
 	</div>
@@ -43,7 +44,7 @@
 	{#if replyComment !== null}
 		<div class="comment-reply">
 			<input type="text" bind:value={replyComment} />
-			<button class="text small" disabled={!isReplyValid} onclick={sendReply}>Send</button>
+			<button class="text small" disabled={!isReplyValid} onclick={sendReply}>{i18n.t('send')}</button>
 		</div>
 	{/if}
 

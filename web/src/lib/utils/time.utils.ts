@@ -12,5 +12,5 @@ function getMinutesAgo(isoTimestamp: string): number {
 export function getMinutesAgoText(isoTimestamp: string): string {
 	const minutesAgo = getMinutesAgo(isoTimestamp);
 
-	return minutesAgo === 0 ? 'Now' : i18n.t('minAgo', { minutes: 'MIN' });
+	return minutesAgo === 0 ? 'Now' : i18n.t('minAgo', { minutes: minutesAgo });
 }

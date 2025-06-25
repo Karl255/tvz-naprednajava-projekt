@@ -39,7 +39,7 @@
 		<p class="header">{i18n.t('reportIssue')}</p>
 
 		<div class="form-group">
-			<label for="station">Issue</label>
+			<label for="station">{i18n.t('issue')}</label>
 			<select id="station" bind:value={issue}>
 				{#each ISSUE_TYPES as option (option.value)}
 					<option value={option.value}>{option.text}</option>
@@ -48,7 +48,6 @@
 		</div>
 
 		<div class="form-group">
-			<label for="station">Station</label>
 			<label for="station">{i18n.t('station')}</label>
 			<select id="station" bind:value={station}>
 				{#each stations as station (station.id)}
