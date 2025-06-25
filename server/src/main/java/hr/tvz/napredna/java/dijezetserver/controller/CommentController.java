@@ -6,10 +6,8 @@ import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.CommentRequest;
 import hr.tvz.napredna.java.dijezetserver.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,38 +30,25 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping
-    public ResponseEntity<List<CommentDto>> getComments() {
-        return ResponseEntity.ok(commentService.findAll());
+    public List<CommentDto> getComments() {
+        return commentService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<CommentDto> createComment(@RequestBody CommentRequest commentRequest, @AuthenticationPrincipal User user) {
-        try {
-            return new ResponseEntity<>(commentService.create(commentRequest, user), HttpStatus.CREATED);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDto createComment(@RequestBody CommentRequest commentRequest, @AuthenticationPrincipal User user) {
+        return commentService.create(commentRequest, user);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CommentDto> updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) {
-        try {
-            return new ResponseEntity<>(commentService.update(id, commentRequest), HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public CommentDto updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) {
+        return commentService.update(id, commentRequest);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-        try {
-            commentService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable Long id) {
+        commentService.deleteById(id);
     }
 
 }

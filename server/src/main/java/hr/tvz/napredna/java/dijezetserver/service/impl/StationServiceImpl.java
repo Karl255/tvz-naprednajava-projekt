@@ -1,6 +1,7 @@
 package hr.tvz.napredna.java.dijezetserver.service.impl;
 
 import hr.tvz.napredna.java.dijezetserver.dto.StationDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.model.Station;
 import hr.tvz.napredna.java.dijezetserver.repository.StationRepository;
 import hr.tvz.napredna.java.dijezetserver.service.StationService;
@@ -30,7 +31,7 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public void deleteById(Long id) {
-        stationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Station with id " + id + " not found"));
+        stationRepository.findById(id).orElseThrow(() -> ApiException.notFound("Station with id " + id + " not found"));
         stationRepository.deleteById(id);
     }
 
@@ -43,7 +44,7 @@ public class StationServiceImpl implements StationService {
             toDto(stationRepository.save(station));
             return toDto(station);
         } else {
-            throw new EntityNotFoundException("Station with id " + id + " not found");
+            throw ApiException.notFound("Station with id " + id + " not found");
         }
     }
 

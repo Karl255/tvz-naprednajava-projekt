@@ -4,6 +4,7 @@ import hr.tvz.napredna.java.dijezetserver.dto.CommentDto;
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
 import hr.tvz.napredna.java.dijezetserver.dto.PinDto;
 import hr.tvz.napredna.java.dijezetserver.dto.StationDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.mapper.CommentMapper;
 import hr.tvz.napredna.java.dijezetserver.mapper.LineMapper;
 import hr.tvz.napredna.java.dijezetserver.mapper.PinMapper;
@@ -17,12 +18,12 @@ import hr.tvz.napredna.java.dijezetserver.repository.CommentRepository;
 import hr.tvz.napredna.java.dijezetserver.repository.PinRepository;
 import hr.tvz.napredna.java.dijezetserver.request.CommentRequest;
 import hr.tvz.napredna.java.dijezetserver.service.CommentService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Component
@@ -39,8 +40,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto create(CommentRequest commentRequest, User user) {
-        Comment parent = Optional.ofNullable(commentRequest.getParentId()).map(id -> commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Parent comment does not exist"))).orElse(null);
-        Pin pin = pinRepository.findById(commentRequest.getPinId()).orElseThrow(() -> new IllegalArgumentException("Pin with id " + commentRequest.getPinId() + " not found"));
+        Comment parent = Optional.ofNullable(commentRequest.getParentId()).map(id -> commentRepository.findById(id).orElseThrow(prepareParentCommentDoesNotExist())).orElse(null);
+        Pin pin = pinRepository.findById(commentRequest.getPinId()).orElseThrow(preparePinDoesNotExist(commentRequest));
 
         Comment comment = toComment(commentRequest, user, parent, pin);
 
@@ -49,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto update(Long id, CommentRequest commentRequest) {
-        Comment existingComment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+        Comment existingComment = commentRepository.findById(id).orElseThrow(prepareCommentNotFoundException(id));
 
         existingComment.setContent(commentRequest.getContent());
         existingComment.setIssueType(commentRequest.getIssueType());
@@ -59,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteById(Long id) {
-        Comment existingComment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comment with id " + id + " not found"));
+        Comment existingComment = commentRepository.findById(id).orElseThrow(prepareCommentNotFoundException(id));
 
         commentRepository.delete(existingComment);
     }
@@ -80,5 +81,17 @@ public class CommentServiceImpl implements CommentService {
 
     private Comment toComment(CommentRequest commentRequest, User user, Comment parentComment, Pin pin) {
         return CommentMapper.toEntity(commentRequest, user, parentComment, pin);
+    }
+
+    private static Supplier<ApiException> prepareCommentNotFoundException(Long id) {
+        return () -> ApiException.notFound("Comment with id " + id + " not found");
+    }
+
+    private static Supplier<ApiException> preparePinDoesNotExist(CommentRequest commentRequest) {
+        return () -> ApiException.notFound("Pin with id " + commentRequest.getPinId() + " not found");
+    }
+
+    private static Supplier<ApiException> prepareParentCommentDoesNotExist() {
+        return () -> ApiException.notFound("Parent comment does not exist");
     }
 }

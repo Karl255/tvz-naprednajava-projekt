@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: di-je-zet-pg
+  namespace: dijezetapp
+spec:
+  selector:
+    app: dijezet-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP

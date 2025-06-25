@@ -1,11 +1,11 @@
 package hr.tvz.napredna.java.dijezetserver.service.impl;
 
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.mapper.LineMapper;
 import hr.tvz.napredna.java.dijezetserver.model.Line;
 import hr.tvz.napredna.java.dijezetserver.repository.LineRepository;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,10 @@ import java.util.stream.Collectors;
 public class LineServiceImpl implements LineService {
 
     private final LineRepository lineRepository;
+
+    private static ApiException prepareLineNotFoundException(Long id) {
+        return ApiException.notFound("Line with id " + id + " not found");
+    }
 
     @Override
     public List<LineDto> findAll() {
@@ -38,13 +42,13 @@ public class LineServiceImpl implements LineService {
             lineRepository.save(line);
             return toDto(line);
         } else {
-            throw new EntityNotFoundException("Line with id " + id + " not found");
+            throw prepareLineNotFoundException(id);
         }
     }
 
     @Override
     public void deleteById(Long id) {
-        lineRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Line with id " + id + " not found."));
+        lineRepository.findById(id).orElseThrow(() -> prepareLineNotFoundException(id));
         lineRepository.deleteById(id);
     }
 

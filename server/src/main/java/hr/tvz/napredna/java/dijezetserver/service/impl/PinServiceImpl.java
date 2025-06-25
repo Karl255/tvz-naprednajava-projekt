@@ -3,6 +3,7 @@ package hr.tvz.napredna.java.dijezetserver.service.impl;
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
 import hr.tvz.napredna.java.dijezetserver.dto.PinDto;
 import hr.tvz.napredna.java.dijezetserver.dto.StationDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.mapper.LineMapper;
 import hr.tvz.napredna.java.dijezetserver.mapper.PinMapper;
 import hr.tvz.napredna.java.dijezetserver.mapper.StationMapper;
@@ -47,7 +48,7 @@ public class PinServiceImpl implements PinService {
 
     @Override
     public PinDto update(Long id, PinRequest pinRequest) {
-        Pin existingPin = pinRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pin does not exist"));
+        Pin existingPin = pinRepository.findById(id).orElseThrow(() -> ApiException.notFound("Pin does not exist"));
 
         Station station = resolveOptionalStation(pinRequest.getStationId()).orElse(null);
         Line line = resolveOptionalLine(pinRequest.getLineId()).orElse(null);
@@ -72,7 +73,7 @@ public class PinServiceImpl implements PinService {
             return Optional.empty();
         }
 
-        return Optional.of(stationRepository.findById(stationId).orElseThrow(() -> new EntityNotFoundException("Station does not exist")));
+        return Optional.of(stationRepository.findById(stationId).orElseThrow(() -> ApiException.notFound("Station does not exist")));
     }
 
     private Optional<Line> resolveOptionalLine(@Nullable Long lineId) {
@@ -80,7 +81,7 @@ public class PinServiceImpl implements PinService {
             return Optional.empty();
         }
 
-        return Optional.of(lineRepository.findById(lineId).orElseThrow(() -> new EntityNotFoundException("Line does not exist")));
+        return Optional.of(lineRepository.findById(lineId).orElseThrow(() -> ApiException.notFound("Line does not exist")));
     }
 
     private PinDto toDto(Pin pin) {
