@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: ghcr.io/karl255/dijezet-frontend:dadde5d5f0a0be7c5187e686637400856b6b7d04
+          image: ghcr.io/karl255/dijezet-frontend:f29c42e9594783d5c2149e3fe683d1d40e1f617b
           ports:
             - containerPort: 80
