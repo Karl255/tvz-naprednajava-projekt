@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { i18n, t } from '$lib/i18n';
+	import { i18n } from '$lib/i18n';
 	import type { PinDto } from '$lib/model/dto';
 
 	interface Props {
@@ -12,18 +12,18 @@
 <div class="thread">
 	<div class="header">
 		<p class="username space-right">username {pin.user}</p>
-		{@render chip($t('lineNumber', { lineNumber: pin.line?.name }))}
+		{@render chip(i18n.t('lineNumber', { lineNumber: pin.line?.name }))}
 		{@render chip(`Type`)}
 	</div>
 
 	<div class="content">
 		<p class="space-right">Comment text.</p>
-		<p class="timestamp">{$t('minAgo', { minutes: 'MIN' })}</p>
+		<p class="timestamp">{i18n.t('minAgo', { minutes: 'MIN' })}</p>
 	</div>
 
 	<div class="actions">
-		<p class="space-right">{$t('uncollapse')}</p>
-		<p>{$t('reply')}</p>
+		<p class="space-right">{i18n.t('uncollapse')}</p>
+		<p>{i18n.t('reply')}</p>
 	</div>
 </div>
 

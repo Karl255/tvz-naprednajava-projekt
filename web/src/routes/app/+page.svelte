@@ -11,8 +11,7 @@
 	import { pinApi } from '$lib/api/pin.api';
 	import ReportIssueModal from '$lib/components/ReportIssueModal.svelte';
 	import { commentApi } from '$lib/api/comment.api';
-	import { i18n, locale, t } from '$lib/i18n';
-	import { onDestroy } from 'svelte';
+	import { i18n } from '$lib/i18n';
 
 	const { data }: PageProps = $props();
 
@@ -79,7 +78,7 @@
 			variation={ButtonVariation.PRIMARY_DARK}
 			size={ButtonSize.LARGE}
 			class="report-issue"
-			onclick={openReportModal}>+ {$t('reportIssue')}</Button
+			onclick={openReportModal}>+ {i18n.t('reportIssue')}</Button
 		>
 	</div>
 

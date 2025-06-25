@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { i18n, t } from '$lib/i18n';
+	import { i18n } from '$lib/i18n';
 	import { ButtonVariation } from '$lib/model/components';
 	import type { LineDto, StationDto } from '$lib/model/dto';
 	import Button from './Button.svelte';
@@ -34,10 +34,10 @@
 
 <dialog bind:this={dialog} class="form">
 	<form onsubmit={report}>
-		<p class="header">{$t('reportIssue')}</p>
+		<p class="header">{i18n.t('reportIssue')}</p>
 
 		<div class="form-group">
-			<label for="station">{$t('station')}</label>
+			<label for="station">{i18n.t('station')}</label>
 			<select id="station" bind:value={station}>
 				{#each stations as station (station.id)}
 					<option value={station}>{station.name}</option>
@@ -46,7 +46,7 @@
 		</div>
 
 		<div class="form-group">
-			<label for="line">{$t('line')}</label>
+			<label for="line">{i18n.t('line')}</label>
 			<select id="line" bind:value={line}>
 				{#each lines as line (line.id)}
 					<option value={line}>{line.name}</option>
@@ -55,11 +55,11 @@
 		</div>
 
 		<div class="form-group">
-			<label for="comment">{$t('comment')}</label>
+			<label for="comment">{i18n.t('comment')}</label>
 			<textarea id="comment" bind:value={comment}></textarea>
 		</div>
 
-		<Button variation={ButtonVariation.PRIMARY_LIGHT} onclick={report} disabled={!isValid}>{$t('report')}</Button>
+		<Button variation={ButtonVariation.PRIMARY_LIGHT} onclick={report} disabled={!isValid}>{i18n.t('report')}</Button>
 	</form>
 </dialog>
 

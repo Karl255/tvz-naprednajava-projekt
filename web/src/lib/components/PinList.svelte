@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { locale } from '$lib/i18n';
+	import { setLocale } from '$lib/i18n';
 	import type { PinDto } from '$lib/model/dto';
-	import { onDestroy } from 'svelte';
 	import ThreadCard from './ThreadCard.svelte';
 
 	interface Props {
@@ -9,19 +8,12 @@
 	}
 
 	const { pins }: Props = $props();
-
-	let currentLocale;
-	const unsubscribe = locale.subscribe(value => {
-		currentLocale = value;
-	});
-
-	onDestroy(unsubscribe);
 </script>
 
 <div class="container">
 	<div>
-		<button onclick={() => locale.set('en')}>EN</button>
-		<button onclick={() => locale.set('hr')}>HR</button>
+		<button onclick={() => setLocale('en')}>EN</button>
+		<button onclick={() => setLocale('hr')}>HR</button>
 	</div>
 
 	<div class="threads">

@@ -1,5 +1,4 @@
-import { I18n, type Scope } from 'i18n-js';
-import { derived, writable } from 'svelte/store';
+import { I18n } from 'i18n-js';
 
 export const i18n = new I18n({
 	en: {
@@ -46,12 +45,10 @@ export const i18n = new I18n({
 	},
 });
 
-export const locale = writable<'en' | 'hr'>('en');
+i18n.locale = localStorage.getItem('locale') ?? 'en';
 
-locale.subscribe(value => {
-	i18n.locale = value;
-});
-
-export const t = derived(locale, () => {
-	return (key: Scope, options = {}) => i18n.t(key, options);
-});
+export function setLocale(locale: string) {
+	i18n.locale = locale;
+	localStorage.setItem('locale', locale);
+	window.location.reload();
+}
