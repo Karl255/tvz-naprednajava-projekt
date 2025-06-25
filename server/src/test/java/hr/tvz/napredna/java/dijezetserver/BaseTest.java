@@ -2,12 +2,22 @@ package hr.tvz.napredna.java.dijezetserver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hr.tvz.napredna.java.dijezetserver.dto.CommentDto;
 import hr.tvz.napredna.java.dijezetserver.dto.UserDto;
-import hr.tvz.napredna.java.dijezetserver.model.*;
+import hr.tvz.napredna.java.dijezetserver.mapper.CommentMapper;
+import hr.tvz.napredna.java.dijezetserver.mapper.PinMapper;
+import hr.tvz.napredna.java.dijezetserver.model.Comment;
+import hr.tvz.napredna.java.dijezetserver.model.IssueType;
+import hr.tvz.napredna.java.dijezetserver.model.Line;
+import hr.tvz.napredna.java.dijezetserver.model.Pin;
+import hr.tvz.napredna.java.dijezetserver.model.Station;
+import hr.tvz.napredna.java.dijezetserver.model.User;
+import hr.tvz.napredna.java.dijezetserver.model.UserRefreshToken;
+import hr.tvz.napredna.java.dijezetserver.model.UserRole;
 import hr.tvz.napredna.java.dijezetserver.request.UserRequest;
-import org.glassfish.jaxb.runtime.v2.schemagen.xmlschema.Any;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +25,7 @@ import java.util.List;
 
 @SpringBootTest(classes = {DiJeZetServerApplication.class})
 @AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles(profiles = "test")
 public class BaseTest {
     //STATIONS
     protected static final List<Station> STATIONS = List.of(
@@ -52,6 +63,7 @@ public class BaseTest {
             new Comment(1L, "Prvi komentar", USER, PIN, null, List.of(), IssueType.DIRTY, null)
     );
     protected static final Comment COMMENT = COMMENTS.getFirst();
+    protected static final CommentDto COMMENT_DTO = CommentMapper.toDto(COMMENT, PinMapper.toDto(COMMENT.getPin(), null, null), List.of());
 
     //TOKENS
     protected static final UserRefreshToken USER_REFRESH_TOKEN_ACTIVE = new UserRefreshToken(1L, USER, "refreshToken", LocalDateTime.now().plusMinutes(2));

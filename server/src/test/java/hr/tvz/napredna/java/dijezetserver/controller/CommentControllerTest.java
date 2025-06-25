@@ -3,8 +3,8 @@ package hr.tvz.napredna.java.dijezetserver.controller;
 import hr.tvz.napredna.java.dijezetserver.BaseTest;
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.CommentDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.service.CommentService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,9 +15,16 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CommentControllerTest extends BaseTest {
     static final List<CommentDto> COMMENTS_DTO = List.of(new CommentDto(COMMENT.getId(), COMMENT.getContent(), COMMENT.getUser().getUsername(), null, COMMENT.getIssueType(), null, List.of()));
@@ -39,10 +46,10 @@ public class CommentControllerTest extends BaseTest {
 
     @Test
     void shouldCreateComment() throws Exception {
-        when(commentService.create(any())).thenReturn(COMMENT_DTO);
+        when(commentService.create(any(), any())).thenReturn(COMMENT_DTO);
         mockMvc.perform(post(ApiPaths.COMMENT)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(COMMENT_DTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(COMMENT_DTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content").value(COMMENT_DTO.getContent()));
@@ -50,8 +57,8 @@ public class CommentControllerTest extends BaseTest {
 
     @Test
     void shouldReturnBadRequestOnCreate() throws Exception {
-        doThrow(new EntityNotFoundException()).when(commentService).create(any());
-        mockMvc.perform(post(ApiPaths.COMMENT))
+        doThrow(ApiException.badRequest()).when(commentService).create(any(), any());
+        mockMvc.perform(post(ApiPaths.COMMENT).contentType(MediaType.APPLICATION_JSON).content(toJson(COMMENT_DTO)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -66,13 +73,14 @@ public class CommentControllerTest extends BaseTest {
                 .andExpect(jsonPath("$.id").value(COMMENT_DTO.getId()))
                 .andExpect(jsonPath("$.content").value(COMMENT_DTO.getContent()));
     }
+
     @Test
     void shouldReturnBadRequestOnUpdate() throws Exception {
-        doThrow(new EntityNotFoundException()).when(commentService).update(anyLong(), any());
-        mockMvc.perform(put(ApiPaths.COMMENT + "/" + COMMENT_DTO.getId()))
+        doThrow(ApiException.badRequest()).when(commentService).update(anyLong(), any());
+        mockMvc.perform(put(ApiPaths.COMMENT + "/" + COMMENT_DTO.getId()).contentType(MediaType.APPLICATION_JSON).content(toJson(COMMENT_DTO)))
                 .andExpect(status().isBadRequest());
     }
-    
+
     @Test
     void shouldDeleteComment() throws Exception {
         doNothing().when(commentService).deleteById(anyLong());
@@ -82,7 +90,7 @@ public class CommentControllerTest extends BaseTest {
 
     @Test
     void shouldReturnNotFoundOnDelete() throws Exception {
-        doThrow(new EntityNotFoundException()).when(commentService).deleteById(anyLong());
+        doThrow(ApiException.notFound()).when(commentService).deleteById(anyLong());
         mockMvc.perform(delete(ApiPaths.COMMENT + "/" + COMMENT_DTO.getId()))
                 .andExpect(status().isNotFound());
     }

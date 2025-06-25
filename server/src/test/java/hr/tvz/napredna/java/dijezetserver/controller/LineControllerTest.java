@@ -3,8 +3,8 @@ package hr.tvz.napredna.java.dijezetserver.controller;
 import hr.tvz.napredna.java.dijezetserver.BaseTest;
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -15,11 +15,18 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class LineControllerTest extends BaseTest{
+public class LineControllerTest extends BaseTest {
     static final List<LineDto> LINES_DTO = List.of(new LineDto(LINE.getId(), LINE.getName()));
     static final LineDto LINE_DTO = LINES_DTO.getFirst();
 
@@ -42,8 +49,8 @@ public class LineControllerTest extends BaseTest{
     void shouldAddLine() throws Exception {
         when(lineService.save(any())).thenReturn(LINE_DTO);
         mockMvc.perform(post(ApiPaths.LINE)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(LINE_DTO)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(LINE_DTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value(LINE_DTO.getName()));
@@ -55,7 +62,7 @@ public class LineControllerTest extends BaseTest{
         mockMvc.perform(put(ApiPaths.LINE + "/" + LINE_DTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(LINE_DTO)))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value(LINE_DTO.getName()));
     }
@@ -69,7 +76,7 @@ public class LineControllerTest extends BaseTest{
 
     @Test
     void shouldReturnNotFoundOnDelete() throws Exception {
-        doThrow(new EntityNotFoundException()).when(lineService).deleteById(anyLong());
+        doThrow(ApiException.notFound()).when(lineService).deleteById(anyLong());
         mockMvc.perform(delete(ApiPaths.LINE + "/" + LINE_DTO.getId()))
                 .andExpect(status().isNotFound());
     }

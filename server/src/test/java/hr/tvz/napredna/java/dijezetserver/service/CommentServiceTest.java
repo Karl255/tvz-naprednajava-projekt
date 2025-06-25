@@ -15,10 +15,14 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class CommentServiceTest extends BaseTest {
-    static final CommentRequest COMMENT_REQUEST = new CommentRequest(COMMENT.getContent(), COMMENT.getPin().getId(), COMMENT.getParentComment() != null ? COMMENT.getParentComment().getId() : null, COMMENT.getIssueType());
+    private static final CommentRequest COMMENT_REQUEST = new CommentRequest(COMMENT.getContent(), COMMENT.getPin().getId(), COMMENT.getParentComment() != null ? COMMENT.getParentComment().getId() : null, COMMENT.getIssueType());
+
     @Autowired
     private CommentService commentService;
 
@@ -28,7 +32,7 @@ public class CommentServiceTest extends BaseTest {
     private PinRepository pinRepository;
 
     @Test
-    void shouldGetComments(){
+    void shouldGetComments() {
         when(commentRepository.findByParentCommentIsNull()).thenReturn(COMMENTS);
 
         var comments = commentService.findAll();
@@ -42,7 +46,7 @@ public class CommentServiceTest extends BaseTest {
         when(commentRepository.save(any())).thenReturn(COMMENT);
         ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
 
-        commentService.create(COMMENT_REQUEST);
+        commentService.create(COMMENT_REQUEST, USER);
 
         verify(commentRepository, times(1)).save(commentCaptor.capture());
         var comment = commentCaptor.getValue();

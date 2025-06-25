@@ -1,25 +1,30 @@
 package hr.tvz.napredna.java.dijezetserver.service;
 
 import hr.tvz.napredna.java.dijezetserver.BaseTest;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.model.User;
-import hr.tvz.napredna.java.dijezetserver.model.UserRefreshToken;
-import hr.tvz.napredna.java.dijezetserver.model.UserRole;
 import hr.tvz.napredna.java.dijezetserver.repository.UserRefreshTokenRepository;
 import hr.tvz.napredna.java.dijezetserver.repository.UserRepository;
-import hr.tvz.napredna.java.dijezetserver.request.UserRequest;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class UserServiceTest extends BaseTest {
     @Autowired
@@ -39,7 +44,7 @@ public class UserServiceTest extends BaseTest {
     }
 
     @Test
-    void shouldGetUserByUsername(){
+    void shouldGetUserByUsername() {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
 
         var user = userService.getByUserName(anyString());
@@ -63,7 +68,7 @@ public class UserServiceTest extends BaseTest {
     @Test
     void shouldThrowExceptionIfUserExists() {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
-        assertThrows(IllegalArgumentException.class, () -> userService.create(USER_REQUEST), "Username " + USER_REQUEST.getUsername() + " already exists" );
+        assertThrows(ApiException.class, () -> userService.create(USER_REQUEST), "Username " + USER_REQUEST.getUsername() + " already exists");
     }
 
     @Test
@@ -82,7 +87,7 @@ public class UserServiceTest extends BaseTest {
     @Test
     void shouldThrowExceptionIfUserDoesNotExistOnUpdate() {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> userService.update(USER_REQUEST), "Username " + USER_REQUEST.getUsername() + " does not exist");
+        assertThrows(ApiException.class, () -> userService.update(USER_REQUEST), "Username " + USER_REQUEST.getUsername() + " does not exist");
     }
 
     @Test
@@ -97,7 +102,7 @@ public class UserServiceTest extends BaseTest {
     @Test
     void shouldThrowExceptionIfUserDoesNotExistOnDelete() {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> userService.delete(USER.getId()), "Username " + USER_REQUEST.getUsername() + " does not exist");
+        assertThrows(ApiException.class, () -> userService.delete(USER.getId()), "Username " + USER_REQUEST.getUsername() + " does not exist");
     }
 
     @Test
@@ -137,7 +142,7 @@ public class UserServiceTest extends BaseTest {
     @Test
     void shouldThrowExceptionIfUserDoesNotExistOnGetRefreshToken() {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> userService.getRefreshToken(USER.getUsername()), "User with username " + USER.getUsername() + " does not exist");
+        assertThrows(ApiException.class, () -> userService.getRefreshToken(USER.getUsername()), "User with username " + USER.getUsername() + " does not exist");
     }
 
     @Test
@@ -149,4 +154,17 @@ public class UserServiceTest extends BaseTest {
         verify(userRefreshTokenRepository, times(1)).findByRefreshToken(any());
         assertEquals(user.getUsername(), USER.getUsername());
     }
+
+    @Test
+    void shouldThrowIfRefreshTokenIsExpired() {
+        when(userRefreshTokenRepository.findByRefreshToken(any())).thenReturn(Optional.of(USER_REFRESH_TOKEN_EXPIRED));
+
+        var ex = assertThrows(ApiException.class, () -> {
+            userService.getByRefreshToken(USER_REFRESH_TOKEN_EXPIRED.getRefreshToken());
+        });
+
+        assertEquals(List.of("Refresh token expired"), ex.getMessages());
+        verify(userRefreshTokenRepository).delete(USER_REFRESH_TOKEN_EXPIRED);
+    }
+
 }

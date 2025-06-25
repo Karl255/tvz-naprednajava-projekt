@@ -2,9 +2,9 @@ package hr.tvz.napredna.java.dijezetserver.service;
 
 import hr.tvz.napredna.java.dijezetserver.BaseTest;
 import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.model.Line;
 import hr.tvz.napredna.java.dijezetserver.repository.LineRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class LineServiceTest extends BaseTest {
     static final LineDto LINE_DTO = new LineDto(LINE.getId(), LINE.getName());
@@ -27,7 +31,7 @@ public class LineServiceTest extends BaseTest {
     private LineRepository lineRepository;
 
     @Test
-    void shouldGetLines(){
+    void shouldGetLines() {
         when(lineRepository.findAll()).thenReturn(LINES);
 
         var lines = lineService.findAll();
@@ -35,7 +39,7 @@ public class LineServiceTest extends BaseTest {
     }
 
     @Test
-    void shouldSaveLine(){
+    void shouldSaveLine() {
         when(lineRepository.save(any())).thenReturn(LINE);
         ArgumentCaptor<Line> lineCaptor = ArgumentCaptor.forClass(Line.class);
 
@@ -47,7 +51,7 @@ public class LineServiceTest extends BaseTest {
     }
 
     @Test
-    void shouldUpdateLine(){
+    void shouldUpdateLine() {
         when(lineRepository.save(any())).thenReturn(LINE);
         when(lineRepository.findById(anyLong())).thenReturn(Optional.of(LINE));
         ArgumentCaptor<Line> lineCaptor = ArgumentCaptor.forClass(Line.class);
@@ -63,11 +67,11 @@ public class LineServiceTest extends BaseTest {
     @Test
     void shouldThrowExceptionIfLineNotFoundOnUpdate() {
         when(lineRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> lineService.update(LINE.getId(), any()), "Line with id " + LINE.getId() + " not found");
+        assertThrows(ApiException.class, () -> lineService.update(LINE.getId(), any()), "Line with id " + LINE.getId() + " not found");
     }
 
     @Test
-    void shouldDeleteLine(){
+    void shouldDeleteLine() {
         when(lineRepository.findById(anyLong())).thenReturn(Optional.of(LINE));
         doNothing().when(lineRepository).deleteById(anyLong());
 
@@ -78,6 +82,6 @@ public class LineServiceTest extends BaseTest {
     @Test
     void shouldThrowExceptionIfLineNotFoundOnDelete() {
         when(lineRepository.findById(anyLong())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> lineService.deleteById(anyLong()), "Line with id " + LINE.getId() + " not found");
+        assertThrows(ApiException.class, () -> lineService.deleteById(anyLong()), "Line with id " + LINE.getId() + " not found");
     }
 }

@@ -2,9 +2,9 @@ package hr.tvz.napredna.java.dijezetserver.service;
 
 import hr.tvz.napredna.java.dijezetserver.BaseTest;
 import hr.tvz.napredna.java.dijezetserver.dto.StationDto;
+import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.model.Station;
 import hr.tvz.napredna.java.dijezetserver.repository.StationRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,11 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class StationServiceTest extends BaseTest {
     static final StationDto STATION_DTO = new StationDto(STATION.getId(), STATION.getName());
@@ -63,7 +67,7 @@ public class StationServiceTest extends BaseTest {
     @Test
     void shouldThrowErrorIfStationNotFoundOnUpdate() {
         when(stationRepository.findById(any())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> stationService.update(STATION.getId(), any()), "Sation with id " + STATION.getId() + " not found");
+        assertThrows(ApiException.class, () -> stationService.update(STATION.getId(), any()), "Sation with id " + STATION.getId() + " not found");
     }
 
     @Test
@@ -78,6 +82,6 @@ public class StationServiceTest extends BaseTest {
     @Test
     void shouldThrowErrorIfStationNotFoundOnDelete() {
         when(stationRepository.findById(any())).thenReturn(Optional.empty());
-        assertThrows(EntityNotFoundException.class, () -> stationService.deleteById(STATION.getId()), "Sation with id " + STATION.getId() + " not found");
+        assertThrows(ApiException.class, () -> stationService.deleteById(STATION.getId()), "Sation with id " + STATION.getId() + " not found");
     }
 }
