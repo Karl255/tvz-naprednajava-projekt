@@ -70,7 +70,7 @@
 	{#if isExpanded}
 		<div class="card replies">
 			{#each thread.replies as reply (reply.id)}
-				<Reply comment={reply} />
+				<Reply comment={reply} onCommentReply={onSendReply} />
 			{/each}
 		</div>
 	{/if}

@@ -10,6 +10,8 @@ export class ApiClient {
 		const url = this.basePath + path + (params ? '?' + params.toString() : '');
 
 		const response = await fetch(url, { method: 'GET' });
+		this.handleErrors(response);
+
 		return await this.getResponseJson<T>(response);
 	}
 
@@ -38,10 +40,18 @@ export class ApiClient {
 		}
 
 		const response = await fetch(url, requestInit);
+		this.handleErrors(response);
+
 		return await this.getResponseJson<T>(response);
 	}
 
 	private async getResponseJson<T>(response: Response) {
 		return (await response.json()) as T;
+	}
+
+	private handleErrors(response: Response) {
+		if (!response.ok) {
+			throw new Error(`Request failed: ${response.statusText}`, { cause: response });
+		}
 	}
 }

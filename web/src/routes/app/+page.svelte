@@ -14,7 +14,7 @@
 
 	const { data }: PageProps = $props();
 
-	const threads: CommentDto[] = $state(data.topComments);
+	let threads: CommentDto[] = $state(data.topComments);
 
 	let selectedLocation: LngLat | null = $state(null);
 	let reportIssueModal: ReturnType<typeof ReportIssueModal>;
@@ -51,9 +51,9 @@
 	}
 
 	async function sendThreadReply(thread: CommentDto, comment: string) {
-		const reply = await commentApi.create(comment, thread.pin.id, null, thread.id);
+		await commentApi.create(comment, thread.pin.id, null, thread.id);
 
-		threads.find(t => t.id === thread.id)?.replies.push(reply);
+		threads = await commentApi.findAllTopComments();
 	}
 </script>
 

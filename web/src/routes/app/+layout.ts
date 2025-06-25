@@ -5,9 +5,10 @@ const { lineApi } = await import('$lib/api/line.api');
 const { stationApi } = await import('$lib/api/station.api');
 
 export const load = (async () => {
-	const user = authService.getCurrentUser();
+	const user = await authService.getCurrentUser();
 
 	if (user === null) {
+		console.info('User not logged in, redirecting...');
 		authService.redirectToLogin();
 	}
 
