@@ -1,18 +1,19 @@
 <script lang="ts">
-	import type { PinDto } from '$lib/model/dto';
+	import type { CommentDto } from '$lib/model/dto';
 	import ThreadCard from './ThreadCard.svelte';
 
 	interface Props {
-		pins: PinDto[];
+		threads: CommentDto[];
+		onThreadReply: (thread: CommentDto, comment: string) => Promise<void>;
 	}
 
-	const { pins }: Props = $props();
+	const { threads, onThreadReply }: Props = $props();
 </script>
 
 <div class="container">
 	<div class="threads">
-		{#each pins as pin (pin.id)}
-			<ThreadCard {pin} />
+		{#each threads as thread (thread.id)}
+			<ThreadCard {thread} {onThreadReply} />
 		{/each}
 	</div>
 </div>

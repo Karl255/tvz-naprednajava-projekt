@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
-	import PinList from '$lib/components/PinList.svelte';
+	import PinList from '$lib/components/ThreadList.svelte';
 	import PinMarker from '$lib/components/PinMarker.svelte';
 	import { ButtonSize, ButtonVariation } from '$lib/model/components';
 	import { type LngLat, type MapMouseEvent } from 'maplibre-gl';
 	import { MapLibre } from 'svelte-maplibre';
 	import type { PageProps } from './$types';
-	import { IssueType, type LineDto, type PinDto, type StationDto } from '$lib/model/dto';
-	import { pinToLngLat } from '$lib/utils/model';
+	import { IssueType, type CommentDto, type LineDto, type StationDto } from '$lib/model/dto';
+	import { pinToLngLat } from '$lib/utils/model.utils';
 	import { pinApi } from '$lib/api/pin.api';
 	import ReportIssueModal from '$lib/components/ReportIssueModal.svelte';
 	import { commentApi } from '$lib/api/comment.api';
@@ -16,7 +16,7 @@
 
 	const { data }: PageProps = $props();
 
-	const pins: PinDto[] = $state(data.pins);
+	let threads: CommentDto[] = $state(data.topComments);
 
 	let selectedLocation: LngLat | null = $state(null);
 	let reportIssueModal: ReturnType<typeof ReportIssueModal>;
@@ -29,7 +29,7 @@
 		}
 	}
 
-	async function reportIssue(station: StationDto, line: LineDto, comment: string) {
+	async function reportIssue(issueType: IssueType, station: StationDto, line: LineDto, comment: string) {
 		if (selectedLocation === null) {
 			return;
 		}
@@ -41,14 +41,21 @@
 			lineId: line.id,
 		};
 
-		const pin = await pinApi.create(newPin);
-		commentApi.create(comment, pin.id, IssueType.LATE, undefined);
 		selectedLocation = null;
-		pins.push(pin);
+
+		const pin = await pinApi.create(newPin);
+		const thread = await commentApi.create(comment, pin.id, issueType, undefined);
+		threads.push(thread);
 	}
 
 	async function openReportModal() {
 		reportIssueModal.open();
+	}
+
+	async function sendThreadReply(thread: CommentDto, comment: string) {
+		await commentApi.create(comment, thread.pin.id, null, thread.id);
+
+		threads = await commentApi.findAllTopComments();
 	}
 </script>
 
@@ -66,8 +73,8 @@
 			zoomOnDoubleClick={false}
 			onclick={selectLocation}
 		>
-			{#each pins as pin (pin)}
-				<PinMarker lngLat={pinToLngLat(pin)} color="var(--color-primary)" />
+			{#each threads as thread (thread.pin)}
+				<PinMarker lngLat={pinToLngLat(thread.pin)} color="var(--color-primary)" />
 			{/each}
 
 			{#if selectedLocation !== null}
@@ -87,7 +94,7 @@
 		</div>
 	</div>
 
-	<PinList {pins}></PinList>
+	<PinList {threads} onThreadReply={sendThreadReply} />
 </div>
 
 <ReportIssueModal bind:this={reportIssueModal} stations={data.stations} lines={data.lines} onReport={reportIssue} />

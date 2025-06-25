@@ -6,17 +6,17 @@ interface CommentRequest {
 	content: string;
 	pinId: number;
 	parentId?: number;
-	issueType: IssueType;
+	issueType: IssueType | null;
 }
 
 class CommentApi {
 	private readonly client = new ApiClient(API_PATH.COMMENT);
 
-	async findAll(): Promise<CommentDto[]> {
+	async findAllTopComments(): Promise<CommentDto[]> {
 		return await this.client.get<CommentDto[]>();
 	}
 
-	async create(content: string, pinId: number, issueType: IssueType, parentId?: number): Promise<CommentDto> {
+	async create(content: string, pinId: number, issueType: IssueType | null, parentId?: number): Promise<CommentDto> {
 		const commentRequest: CommentRequest = {
 			content,
 			pinId,

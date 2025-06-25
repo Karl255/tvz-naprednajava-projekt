@@ -8,6 +8,7 @@ export const load = (async () => {
 	const user = await authService.getCurrentUser();
 
 	if (user === null) {
+		console.info('User not logged in, redirecting...');
 		authService.redirectToLogin();
 	}
 
