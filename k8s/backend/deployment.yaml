@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: dijezet-spring-backend
-          image: ghcr.io/karl255/tvz-naprednajava-projekt:latest
+          image: ghcr.io/karl255/tvz-naprednajava-projekt:dadde5d5f0a0be7c5187e686637400856b6b7d04
           ports:
             - containerPort: 8080
