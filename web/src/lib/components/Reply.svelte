@@ -11,6 +11,7 @@
 	const { comment, onCommentReply }: Props = $props();
 
 	let replyComment: string | null = $state(null);
+	let isReplyValid = $derived(replyComment !== null && (replyComment as string).length >= 5);
 
 	async function sendReply() {
 		if (replyComment === null || replyComment.length === 0) {
@@ -42,7 +43,7 @@
 	{#if replyComment !== null}
 		<div class="comment-reply">
 			<input type="text" bind:value={replyComment} />
-			<button class="text small" onclick={sendReply}>Send</button>
+			<button class="text small" disabled={!isReplyValid} onclick={sendReply}>Send</button>
 		</div>
 	{/if}
 

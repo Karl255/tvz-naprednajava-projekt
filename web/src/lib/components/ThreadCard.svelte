@@ -13,6 +13,7 @@
 
 	let isExpanded = $state(false);
 	let replyComment: string | null = $state(null);
+	let isReplyValid = $derived(replyComment !== null && (replyComment as string).length >= 5);
 
 	const replyCount = $derived(getReplyCount(thread));
 
@@ -63,7 +64,7 @@
 	{#if replyComment !== null}
 		<div class="card reply">
 			<input type="text" bind:value={replyComment} />
-			<button class="text" onclick={sendReply}>Send</button>
+			<button class="text" disabled={!isReplyValid} onclick={sendReply}>Send</button>
 		</div>
 	{/if}
 

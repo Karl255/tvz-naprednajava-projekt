@@ -75,7 +75,7 @@
         flex-direction: column;
         gap: 7px;
     }
-    
+
     .form-error {
         color: var(--color-error-text);
         font-size: 14px;
@@ -90,15 +90,20 @@
         border-radius: var(--border-radius);
         padding: 10px 15px;
     }
-    
+
     button.text {
         color: inherit;
         font: inherit;
         background: none;
         border: none;
         padding: 0;
-        
+
         cursor: pointer;
         text-decoration: underline;
+
+        &:disabled {
+            color: lch(from currentcolor calc(l - 15) 0 h / alpha);
+            cursor: not-allowed;
+        }
     }
 }
