@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Self from './Reply.svelte';
 	import type { CommentDto } from '$lib/model/dto';
 	import { getMinutesAgo } from '$lib/utils/time.utils';
 
@@ -44,9 +45,21 @@
 			<button class="text small" onclick={sendReply}>Send</button>
 		</div>
 	{/if}
+
+	{#each comment.replies as reply (reply.id)}
+		<div class="sub-reply">
+			<Self comment={reply} {onCommentReply} />
+		</div>
+	{/each}
 </div>
 
 <style>
+	.subtree {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
 	.comment {
 		display: flex;
 		flex-direction: column;
@@ -107,6 +120,10 @@
 			flex-grow: 1;
 			padding: 2px;
 		}
+	}
+
+	.sub-reply {
+		margin-left: 24px;
 	}
 
 	button.small {
