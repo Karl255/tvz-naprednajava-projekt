@@ -2,11 +2,9 @@ package hr.tvz.napredna.java.dijezetserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles(profiles = "test")
-class DiJeZetServerApplicationTests {
+class DiJeZetServerApplicationTests extends BaseTest {
 
     @Test
     void contextLoads() {

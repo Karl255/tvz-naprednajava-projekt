@@ -43,6 +43,7 @@ public class LineController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLine(@PathVariable Long id) {
         lineService.deleteById(id);
     }

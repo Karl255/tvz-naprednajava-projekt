@@ -1,0 +1,1 @@
+INSERT INTO public.users (id, hashed_password, username, role) VALUES (1, '$2a$10$JJCZ/PRmjaJ0maxTfH8WSuUz4jzBilnnCEaJaqPOuVABk9uFu7uL6', 'test', 1);
