@@ -5,6 +5,7 @@ import hr.tvz.napredna.java.dijezetserver.BaseTest;
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.LoginDto;
 import hr.tvz.napredna.java.dijezetserver.request.RefreshTokenRequest;
+import hr.tvz.napredna.java.dijezetserver.service.UserRefreshTokenService;
 import hr.tvz.napredna.java.dijezetserver.service.UserService;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,8 @@ public class AuthControllerTest extends BaseTest {
     @MockitoBean
     private UserService userService;
     @MockitoBean
+    private UserRefreshTokenService userRefreshTokenService;
+    @MockitoBean
     private AuthenticationManager authenticationManager;
 
     private SecretKey secretKey;
@@ -51,7 +54,7 @@ public class AuthControllerTest extends BaseTest {
     @Test
     void shouldLoginUser() throws Exception {
         when(userService.getByUserName(any())).thenReturn(USER_DTO);
-        when(userService.getRefreshToken(any())).thenReturn(USER_REFRESH_TOKEN_ACTIVE.getRefreshToken());
+        when(userRefreshTokenService.getRefreshToken(any())).thenReturn(USER_REFRESH_TOKEN_ACTIVE.getRefreshToken());
 
         mockMvc.perform(post(ApiPaths.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,8 +74,8 @@ public class AuthControllerTest extends BaseTest {
     @Test
     void shouldLoginUserAndGetProfile() throws Exception {
         when(userService.getByUserName(any())).thenReturn(USER_DTO);
-        when(userService.getRefreshToken(any())).thenReturn(USER_REFRESH_TOKEN_ACTIVE.getRefreshToken());
-        when(userService.getByRefreshToken(any())).thenReturn(USER_DTO);
+        when(userRefreshTokenService.getRefreshToken(any())).thenReturn(USER_REFRESH_TOKEN_ACTIVE.getRefreshToken());
+        when(userRefreshTokenService.getByRefreshToken(any())).thenReturn(USER_DTO);
 
         MvcResult result = mockMvc.perform(post(ApiPaths.LOGIN)
                         .contentType(MediaType.APPLICATION_JSON)

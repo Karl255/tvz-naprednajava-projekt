@@ -29,6 +29,8 @@ import static org.mockito.Mockito.when;
 public class UserServiceTest extends BaseTest {
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRefreshTokenService userRefreshTokenService;
 
     @MockitoBean
     private UserRepository userRepository;
@@ -109,7 +111,7 @@ public class UserServiceTest extends BaseTest {
     void shouldGetActiveRefreshToken() {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
         when(userRefreshTokenRepository.findByUser(any())).thenReturn(Optional.of(USER_REFRESH_TOKEN_ACTIVE));
-        String token = userService.getRefreshToken(USER.getUsername());
+        String token = userRefreshTokenService.getRefreshToken(USER.getUsername());
 
         verify(userRefreshTokenRepository, times(1)).findByUser(any());
         verify(userRefreshTokenRepository, never()).delete(any());
@@ -121,7 +123,7 @@ public class UserServiceTest extends BaseTest {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
         when(userRefreshTokenRepository.findByUser(any())).thenReturn(Optional.of(USER_REFRESH_TOKEN_EXPIRED));
 
-        String token = userService.getRefreshToken(USER.getUsername());
+        String token = userRefreshTokenService.getRefreshToken(USER.getUsername());
 
         verify(userRefreshTokenRepository, times(1)).findByUser(any());
         verify(userRefreshTokenRepository, times(1)).delete(any());
@@ -133,7 +135,7 @@ public class UserServiceTest extends BaseTest {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(USER));
         when(userRefreshTokenRepository.findByUser(any())).thenReturn(Optional.empty());
 
-        String token = userService.getRefreshToken(USER.getUsername());
+        String token = userRefreshTokenService.getRefreshToken(USER.getUsername());
 
         verify(userRefreshTokenRepository, times(1)).findByUser(any());
         assertFalse(token.isEmpty());
@@ -142,14 +144,14 @@ public class UserServiceTest extends BaseTest {
     @Test
     void shouldThrowExceptionIfUserDoesNotExistOnGetRefreshToken() {
         when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
-        assertThrows(ApiException.class, () -> userService.getRefreshToken(USER.getUsername()), "User with username " + USER.getUsername() + " does not exist");
+        assertThrows(ApiException.class, () -> userRefreshTokenService.getRefreshToken(USER.getUsername()), "User with username " + USER.getUsername() + " does not exist");
     }
 
     @Test
     void shouldGetUserByRefreshToken() {
         when(userRefreshTokenRepository.findByRefreshToken(any())).thenReturn(Optional.of(USER_REFRESH_TOKEN_ACTIVE));
 
-        var user = userService.getByRefreshToken(USER_REFRESH_TOKEN_ACTIVE.getRefreshToken());
+        var user = userRefreshTokenService.getByRefreshToken(USER_REFRESH_TOKEN_ACTIVE.getRefreshToken());
 
         verify(userRefreshTokenRepository, times(1)).findByRefreshToken(any());
         assertEquals(user.getUsername(), USER.getUsername());
@@ -160,7 +162,7 @@ public class UserServiceTest extends BaseTest {
         when(userRefreshTokenRepository.findByRefreshToken(any())).thenReturn(Optional.of(USER_REFRESH_TOKEN_EXPIRED));
 
         var ex = assertThrows(ApiException.class, () -> {
-            userService.getByRefreshToken(USER_REFRESH_TOKEN_EXPIRED.getRefreshToken());
+            userRefreshTokenService.getByRefreshToken(USER_REFRESH_TOKEN_EXPIRED.getRefreshToken());
         });
 
         assertEquals(List.of("Refresh token expired"), ex.getMessages());

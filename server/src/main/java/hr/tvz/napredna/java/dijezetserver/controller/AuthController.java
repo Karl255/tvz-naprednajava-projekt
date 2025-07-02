@@ -7,6 +7,7 @@ import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.request.RefreshTokenRequest;
 import hr.tvz.napredna.java.dijezetserver.request.UserRequest;
 import hr.tvz.napredna.java.dijezetserver.security.JwtUtils;
+import hr.tvz.napredna.java.dijezetserver.service.UserRefreshTokenService;
 import hr.tvz.napredna.java.dijezetserver.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,6 +31,7 @@ import java.time.Duration;
 public class AuthController {
 
     private final UserService userService;
+    private final UserRefreshTokenService userRefreshTokenService;
     private final AuthenticationManager authenticationManager;
     private final SecretKey jwtSecretKey;
 
@@ -42,7 +44,7 @@ public class AuthController {
         }
 
         UserDto user = userService.getByUserName(userRequest.getUsername());
-        String refreshToken = userService.getRefreshToken(userRequest.getUsername());
+        String refreshToken = userRefreshTokenService.getRefreshToken(userRequest.getUsername());
         LoginDto loginDto = new LoginDto(user, refreshToken);
 
         ResponseCookie cookie = ResponseCookie.from("token", JwtUtils.createToken(user, jwtSecretKey))
@@ -58,8 +60,8 @@ public class AuthController {
 
     @PostMapping(ApiPaths.REFRESH_TOKEN)
     public ResponseEntity<LoginDto> refreshToken(@RequestBody RefreshTokenRequest tokenRequest) {
-        UserDto user = userService.getByRefreshToken(tokenRequest.getToken());
-        String refreshToken = userService.getRefreshToken(user.getUsername());
+        UserDto user = userRefreshTokenService.getByRefreshToken(tokenRequest.getToken());
+        String refreshToken = userRefreshTokenService.getRefreshToken(user.getUsername());
         LoginDto loginDto = new LoginDto(user, refreshToken);
 
         ResponseCookie cookie = ResponseCookie.from("token", JwtUtils.createToken(user, jwtSecretKey))

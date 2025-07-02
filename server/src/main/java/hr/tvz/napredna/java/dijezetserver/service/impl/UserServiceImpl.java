@@ -9,6 +9,7 @@ import hr.tvz.napredna.java.dijezetserver.model.UserRole;
 import hr.tvz.napredna.java.dijezetserver.repository.UserRefreshTokenRepository;
 import hr.tvz.napredna.java.dijezetserver.repository.UserRepository;
 import hr.tvz.napredna.java.dijezetserver.request.UserRequest;
+import hr.tvz.napredna.java.dijezetserver.service.UserRefreshTokenService;
 import hr.tvz.napredna.java.dijezetserver.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.UUID;
 
 @Component
 @AllArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserRefreshTokenService {
 
     private final UserRepository userRepository;
     private final UserRefreshTokenRepository userRefreshTokenRepository;

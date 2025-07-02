@@ -18,8 +18,4 @@ public interface UserService {
     UserDto update(UserRequest userRequest);
 
     void delete(Long id);
-
-    String getRefreshToken(String username);
-
-    UserDto getByRefreshToken(String token);
 }
