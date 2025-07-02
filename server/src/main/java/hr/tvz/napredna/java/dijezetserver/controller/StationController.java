@@ -2,10 +2,12 @@ package hr.tvz.napredna.java.dijezetserver.controller;
 
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
 import hr.tvz.napredna.java.dijezetserver.dto.StationDto;
+import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.service.StationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,8 +35,8 @@ public class StationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public StationDto createStation(@RequestBody StationDto stationDto) {
-        return stationService.save(stationDto);
+    public StationDto createStation(@RequestBody StationDto stationDto, @AuthenticationPrincipal User user) {
+        return stationService.create(stationDto, user);
     }
 
     @PutMapping("/{id}")

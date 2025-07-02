@@ -54,7 +54,7 @@ class PinServiceTest extends BaseTest {
         when(pinRepository.save(any())).thenReturn(PIN);
         ArgumentCaptor<Pin> pinCaptor = ArgumentCaptor.forClass(Pin.class);
 
-        pinService.save(PIN_REQUEST, USER);
+        pinService.create(PIN_REQUEST, USER);
 
         verify(pinRepository, times(1)).save(pinCaptor.capture());
         var pin = pinCaptor.getValue();
@@ -117,7 +117,7 @@ class PinServiceTest extends BaseTest {
         var request = new PinRequest(null, null, new BigDecimal("45.0"), new BigDecimal("16.0"));
         when(pinRepository.save(any())).thenReturn(PIN);
 
-        pinService.save(request, USER);
+        pinService.create(request, USER);
 
         verify(pinRepository).save(any());
     }
@@ -127,7 +127,7 @@ class PinServiceTest extends BaseTest {
         when(stationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         var ex = assertThrows(ApiException.class, () -> {
-            pinService.save(PIN_REQUEST, USER);
+            pinService.create(PIN_REQUEST, USER);
         });
 
         assertEquals(List.of("Station does not exist"), ex.getMessages());

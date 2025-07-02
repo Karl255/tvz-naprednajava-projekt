@@ -43,7 +43,7 @@ public class LineServiceTest extends BaseTest {
         when(lineRepository.save(any())).thenReturn(LINE);
         ArgumentCaptor<Line> lineCaptor = ArgumentCaptor.forClass(Line.class);
 
-        lineService.save(LINE_DTO);
+        lineService.create(LINE_DTO, USER);
 
         verify(lineRepository, times(1)).save(lineCaptor.capture());
         var line = lineCaptor.getValue();

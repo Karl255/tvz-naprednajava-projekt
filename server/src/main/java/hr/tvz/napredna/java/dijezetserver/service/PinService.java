@@ -4,16 +4,19 @@ import hr.tvz.napredna.java.dijezetserver.dto.PinDto;
 import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.request.PinRequest;
 
-import java.time.Instant;
 import java.util.List;
 
-public interface PinService {
+public interface PinService extends EntityService<PinDto, PinRequest> {
+    @Override
     List<PinDto> findAll();
 
-    PinDto save(PinRequest pinRequest, User user);
+    @Override
+    PinDto create(PinRequest pinRequest, User user);
 
+    @Override
     PinDto update(Long id, PinRequest lineDto);
 
+    @Override
     void deleteById(Long id);
 
     void deleteByIds(List<Long> ids);

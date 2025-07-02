@@ -47,7 +47,7 @@ public class LineControllerTest extends BaseTest {
 
     @Test
     void shouldAddLine() throws Exception {
-        when(lineService.save(any())).thenReturn(LINE_DTO);
+        when(lineService.create(any(), any())).thenReturn(LINE_DTO);
         mockMvc.perform(post(ApiPaths.LINE)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(LINE_DTO)))

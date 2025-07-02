@@ -37,7 +37,7 @@ public class PinController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PinDto createPin(@RequestBody PinRequest pinRequest, @AuthenticationPrincipal User user) {
-        return pinService.save(pinRequest, user);
+        return pinService.create(pinRequest, user);
     }
 
     @PutMapping("/{id}")

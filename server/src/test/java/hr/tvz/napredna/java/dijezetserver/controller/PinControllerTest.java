@@ -46,7 +46,7 @@ public class PinControllerTest extends BaseTest {
 
     @Test
     void shouldCreatePin() throws Exception {
-        when(pinService.save(any(), any())).thenReturn(PIN_DTO);
+        when(pinService.create(any(), any())).thenReturn(PIN_DTO);
         mockMvc.perform(post(ApiPaths.PIN)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(PIN_DTO)))
@@ -58,7 +58,7 @@ public class PinControllerTest extends BaseTest {
 
     @Test
     void shouldReturnBadRequestOnCreatePin() throws Exception {
-        doThrow(ApiException.badRequest()).when(pinService).save(any(), any());
+        doThrow(ApiException.badRequest()).when(pinService).create(any(), any());
         mockMvc.perform(post(ApiPaths.PIN).contentType(MediaType.APPLICATION_JSON).content(toJson(PIN_DTO)))
                 .andExpect(status().isBadRequest());
     }

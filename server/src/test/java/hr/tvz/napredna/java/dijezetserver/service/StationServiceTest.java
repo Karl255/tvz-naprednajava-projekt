@@ -43,7 +43,7 @@ public class StationServiceTest extends BaseTest {
         when(stationRepository.save(any())).thenReturn(STATION);
         ArgumentCaptor<Station> stationCaptor = ArgumentCaptor.forClass(Station.class);
 
-        stationService.save(STATION_DTO);
+        stationService.create(STATION_DTO, USER);
 
         verify(stationRepository, times(1)).save(stationCaptor.capture());
         var station = stationCaptor.getValue();

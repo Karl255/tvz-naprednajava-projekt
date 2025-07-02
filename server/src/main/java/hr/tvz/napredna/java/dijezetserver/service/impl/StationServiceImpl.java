@@ -3,6 +3,7 @@ package hr.tvz.napredna.java.dijezetserver.service.impl;
 import hr.tvz.napredna.java.dijezetserver.dto.StationDto;
 import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.model.Station;
+import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.repository.StationRepository;
 import hr.tvz.napredna.java.dijezetserver.service.StationService;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +26,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public StationDto save(StationDto stationDto) {
+    public StationDto create(StationDto stationDto, User user) {
         return toDto(stationRepository.save(toEntity(stationDto)));
     }
 

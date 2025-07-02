@@ -47,7 +47,7 @@ public class StationControllerTest extends BaseTest {
 
     @Test
     void shouldCreateStation() throws Exception {
-        when(stationService.save(any())).thenReturn(STATION_DTO);
+        when(stationService.create(any(), any())).thenReturn(STATION_DTO);
         mockMvc.perform(post(ApiPaths.STATION)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(STATION_DTO)))

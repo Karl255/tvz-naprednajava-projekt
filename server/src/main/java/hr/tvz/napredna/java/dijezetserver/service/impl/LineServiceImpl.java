@@ -4,6 +4,7 @@ import hr.tvz.napredna.java.dijezetserver.dto.LineDto;
 import hr.tvz.napredna.java.dijezetserver.exceptions.ApiException;
 import hr.tvz.napredna.java.dijezetserver.mapper.LineMapper;
 import hr.tvz.napredna.java.dijezetserver.model.Line;
+import hr.tvz.napredna.java.dijezetserver.model.User;
 import hr.tvz.napredna.java.dijezetserver.repository.LineRepository;
 import hr.tvz.napredna.java.dijezetserver.service.LineService;
 import lombok.AllArgsConstructor;
@@ -29,7 +30,7 @@ public class LineServiceImpl implements LineService {
     }
 
     @Override
-    public LineDto save(LineDto lineDto) {
+    public LineDto create(LineDto lineDto, User user) {
         return toDto(lineRepository.save(toEntity(lineDto)));
     }
 

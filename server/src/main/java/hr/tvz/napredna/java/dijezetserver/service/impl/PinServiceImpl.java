@@ -40,7 +40,7 @@ public class PinServiceImpl implements PinService {
     }
 
     @Override
-    public PinDto save(PinRequest pinRequest, User user) {
+    public PinDto create(PinRequest pinRequest, User user) {
         Station station = resolveOptionalStation(pinRequest.getStationId()).orElse(null);
         Line line = resolveOptionalLine(pinRequest.getLineId()).orElse(null);
 
