@@ -2,7 +2,7 @@ package hr.tvz.napredna.java.dijezetserver.controller;
 
 import hr.tvz.napredna.java.dijezetserver.BaseTest;
 import hr.tvz.napredna.java.dijezetserver.config.ApiPaths;
-import hr.tvz.napredna.java.dijezetserver.dto.UserDto;
+import hr.tvz.napredna.java.dijezetserver.service.UserRefreshTokenService;
 import hr.tvz.napredna.java.dijezetserver.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +14,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.List;
-
 import static org.mockito.Mockito.when;
 
 public class UserControllerTest extends BaseTest {
@@ -24,6 +22,8 @@ public class UserControllerTest extends BaseTest {
 
     @MockitoBean
     private UserService userService;
+    @MockitoBean
+    private UserRefreshTokenService userRefreshTokenService;
 
     @Test
     void shouldReturnUsers() throws Exception {

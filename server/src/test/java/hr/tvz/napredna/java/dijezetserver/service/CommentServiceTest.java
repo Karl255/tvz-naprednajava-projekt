@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 public class CommentServiceTest extends BaseTest {
     private static final CommentRequest COMMENT_REQUEST = new CommentRequest(COMMENT.getContent(), COMMENT.getPin().getId(), COMMENT.getParentComment() != null ? COMMENT.getParentComment().getId() : null, COMMENT.getIssueType());
-
+    private static final List<Long> PIN_IDS = List.of(1L, 2L, 3L);
     @Autowired
     private CommentService commentService;
 
@@ -76,5 +77,16 @@ public class CommentServiceTest extends BaseTest {
 
         commentService.deleteById(COMMENT.getId());
         verify(commentRepository, times(1)).delete(any());
+    }
+
+    @Test
+    void shouldDeleteByPinId() {
+        doNothing().when(commentRepository).deleteAllByPinIdIn(any());
+        ArgumentCaptor<List<Long>> pinsIdCaptor = ArgumentCaptor.forClass(List.class);
+
+        commentService.deleteByPinIds(PIN_IDS);
+
+        verify(commentRepository, times(1)).deleteAllByPinIdIn(pinsIdCaptor.capture());
+        assertEquals(PIN_IDS, pinsIdCaptor.getValue());
     }
 }
